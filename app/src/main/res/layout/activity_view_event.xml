@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view_event">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/dataTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etDateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="12">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/gps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etLongitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etLatitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/locationEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etLocationEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/event"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/licensePlate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etLicensePlate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/client"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etClient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/boat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etBoat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/typeVehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etTypeVehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/reasonVisit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etReasonVisit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/destination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/customsVisit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etCustomsVisit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/licensePlate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etLicensePlate2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/passenger"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etPassenger"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/separation"
+                android:layout_margin="@dimen/separation"
+                android:background="@color/colorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/carrierCompany"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"/>
+
+                <EditText
+                    android:background="@color/colorWhite"
+                    android:id="@+id/etCarrierCompany"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnCheckOut"
+                android:text="@string/checkOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
