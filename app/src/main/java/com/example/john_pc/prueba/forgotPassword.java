@@ -1,5 +1,7 @@
 package com.example.john_pc.prueba;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -8,13 +10,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-public class forgotPassword extends AppCompatActivity implements View.OnClickListener {
+public class forgotPassword extends AppCompatActivity implements View.OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener {
 
     EditText etUser;
     Button btnSend;
     Toast msj;
+    ProgressDialog mProgressDialog;
+    RequestQueue mRequestQueue;
+    JsonObjectRequest mJsonObjectRequest;
+    String url = "";
+    String auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -25,6 +44,10 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
 
         btnSend = findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
+
+        /*Bundle parametros = this.getIntent().getExtras();
+        auth = parametros.getString("auth");
+        userName = parametros.getString("userName"); */
 
     }
 
@@ -51,6 +74,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
                     else {
 
                         //llamar a la funcion forgotPassword
+                        enviarEmail();
 
                     }
 
@@ -69,4 +93,53 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    private void enviarEmail() {
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.show();
+
+        mRequestQueue = Volley.newRequestQueue(this);
+
+        mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, this, this) {
+
+            @Override
+            public Map getParams() {
+                Map params = new HashMap();
+
+                params.put("email", etUser.getText().toString().trim());
+
+                return params;
+            }
+
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Authorization", auth); //authentication
+                return headers;
+            }
+
+        };
+
+        mRequestQueue.add(mJsonObjectRequest);
+
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+
+        msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
+        msj.show();
+        mProgressDialog.hide();
+
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+        mProgressDialog.hide();
+        msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
+        msj.show();
+
+    }
 }
