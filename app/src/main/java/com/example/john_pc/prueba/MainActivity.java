@@ -21,8 +21,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     String url = "https://test.portcolon2000.site/api/authUser";
     String credentials;
     String auth;
+    int code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -79,7 +86,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
                         //llamar la funcion de login
 
-                        credentials = etUser.getText().toString().trim()+":"+etPassword.getText().toString().trim();
+                        String password = encryptPassword(etPassword.getText().toString().trim());
+
+                        credentials = etUser.getText().toString().trim()+":"+password;
                         auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
                         cargarLogin();
@@ -141,15 +150,63 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     @Override
     public void onResponse(JSONObject response) {
 
-        msj = Toast.makeText(this, "Bienvenido!!" + response, Toast.LENGTH_LONG);
-        msj.show();
-        mProgressDialog.hide();
+        try {
+            code = response.getInt("code");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        ir = new Intent(this, events.class);
-        ir.putExtra("auth", auth);
-        ir.putExtra("userName", etUser.getText().toString().trim());
-        startActivity(ir);
+        if(code == 0) {
 
+            msj = Toast.makeText(this, "Bienvenido!!" + response, Toast.LENGTH_LONG);
+            msj.show();
+            mProgressDialog.hide();
+            ir = new Intent(this, events.class);
+            ir.putExtra("auth", auth);
+            ir.putExtra("userName", etUser.getText().toString().trim());
+            startActivity(ir);
+
+        } else {
+
+            msj = Toast.makeText(this, "Usuario o Clave incorrecto!!" + response, Toast.LENGTH_LONG);
+            msj.show();
+            mProgressDialog.hide();
+
+        }
+
+    }
+
+    private static String encryptPassword(String password)
+    {
+        String sha1 = "";
+        try
+        {
+            MessageDigest crypt = MessageDigest.getInstance("SHA-1");
+            crypt.reset();
+            crypt.update(password.getBytes("UTF-8"));
+            sha1 = byteToHex(crypt.digest());
+        }
+        catch(NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+        return sha1;
+    }
+
+    private static String byteToHex(final byte[] hash)
+    {
+        Formatter formatter = new Formatter();
+        for (byte b : hash)
+        {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
     }
 
 }

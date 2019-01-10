@@ -32,8 +32,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonObjectRequest mJsonObjectRequest;
-    String url = "";
-    String auth;
+    String url = "https://test.portcolon2000.site/api/forgotPass";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -103,19 +102,19 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
 
         mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, this, this) {
 
-            @Override
+            /*@Override
             public Map getParams() {
                 Map params = new HashMap();
 
                 params.put("email", etUser.getText().toString().trim());
 
                 return params;
-            }
+            }*/
 
             @Override
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
-                headers.put("Authorization", auth); //authentication
+                headers.put("email", etUser.getText().toString().trim()); //correo
                 return headers;
             }
 
