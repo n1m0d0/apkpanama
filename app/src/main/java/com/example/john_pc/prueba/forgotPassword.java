@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -32,7 +33,10 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonObjectRequest mJsonObjectRequest;
+    JSONObject userName;
     String url = "https://test.portcolon2000.site/api/forgotPass";
+    Intent ir;
+    int code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -73,6 +77,16 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
                     else {
 
                         //llamar a la funcion forgotPassword
+
+                        userName = new JSONObject();
+                        try {
+                            userName.put("userName", etUser.getText().toString().trim());
+
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
                         enviarEmail();
 
                     }
@@ -100,7 +114,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, this, this) {
+        mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, userName, this, this) {
 
             /*@Override
             public Map getParams() {
@@ -127,9 +141,27 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onResponse(JSONObject response) {
 
-        msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
-        msj.show();
-        mProgressDialog.hide();
+        try {
+            code = response.getInt("code");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if(code == 0) {
+
+            msj = Toast.makeText(this, "Se envio un correo!!" + response, Toast.LENGTH_LONG);
+            msj.show();
+            mProgressDialog.hide();
+            ir = new Intent(this, MainActivity.class);
+            startActivity(ir);
+
+        } else {
+
+            msj = Toast.makeText(this, "Usuario incorrecto!!" + response, Toast.LENGTH_LONG);
+            msj.show();
+            mProgressDialog.hide();
+
+        }
 
     }
 
