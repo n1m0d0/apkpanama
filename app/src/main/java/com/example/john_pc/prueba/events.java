@@ -5,7 +5,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -14,16 +13,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class events extends AppCompatActivity implements Response.ErrorListener, Response.Listener<JSONObject> {
+public class events extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
 
     ListView lvEvents;
     FloatingActionButton fbAdd;
@@ -34,8 +35,14 @@ public class events extends AppCompatActivity implements Response.ErrorListener,
     String userName;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
-    JsonObjectRequest mJsonObjectRequest;
+    JsonArrayRequest mJsonArrayRequest;
     String url = "https://test.portcolon2000.site/api/openEvent";
+    int idEvent;
+    int idEventDependency;
+    String dateEvent;
+    String posGeo;
+    int idForm;
+    JSONObject p;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -89,16 +96,7 @@ public class events extends AppCompatActivity implements Response.ErrorListener,
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url,null, this, this){
-
-            @Override
-            public Map getParams() {
-                Map params = new HashMap();
-
-                params.put("idEvent", 0);
-
-                return params;
-            }
+        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET,url,null, this, this){
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -109,11 +107,51 @@ public class events extends AppCompatActivity implements Response.ErrorListener,
 
         };
 
-        mRequestQueue.add(mJsonObjectRequest);
+        mRequestQueue.add(mJsonArrayRequest);
 
     }
 
     @Override
+    public void onResponse(JSONArray response) {
+
+        msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
+        msj.show();
+        mProgressDialog.hide();
+        // Process the JSON
+        try{
+            // Loop through the array elements
+            for(int i=0;i<response.length();i++) {
+                // Get current json object
+                JSONObject event = response.getJSONObject(i);
+
+                // Get the current student (json object) data
+                idEvent = event.getInt("idEvent");
+                idEventDependency = event.getInt("idEventDependency");
+                dateEvent = event.getString("dateEvent");
+                posGeo = event.getString("posGeo");
+                idForm = event.getInt("idForm");
+                p = event.getJSONObject("p");
+
+                for(int j=0;j<p.length();j++) {
+
+
+
+                }
+
+
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+    }
+
+    /*@Override
     public void onErrorResponse(VolleyError error) {
 
         mProgressDialog.hide();
@@ -130,5 +168,5 @@ public class events extends AppCompatActivity implements Response.ErrorListener,
         msj.show();
         mProgressDialog.hide();
 
-    }
+    }*/
 }
