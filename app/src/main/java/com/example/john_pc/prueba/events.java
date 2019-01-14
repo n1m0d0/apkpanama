@@ -1,10 +1,12 @@
 package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,13 +38,17 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
-    String url = "https://test.portcolon2000.site/api/openEvent";
-    int idEvent;
-    int idEventDependency;
-    String dateEvent;
-    String posGeo;
+    String url = "https://test.portcolon2000.site/api/lastEvents";
+    Intent ir;
     int idForm;
-    JSONObject p;
+    int idEvent;
+    String keyValue;
+    String dateEventBegin;
+    String dateEventEnd;
+    int personNumber;
+    int containerNumber;
+    int eventState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -60,10 +66,10 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         msj = Toast.makeText(this, auth + " " + userName, Toast.LENGTH_LONG);
         msj.show();
 
-
+        cargarEventos();
 
         //funcionalidad a la lista
-        /*lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -71,17 +77,24 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                 // recuperamos el id
                 id_events = "" + elegido.getId();
+                msj = Toast.makeText(events.this, "Evento elegido: " + id_events, Toast.LENGTH_LONG);
+                msj.show();
                 // llamar a la funcion para ver el evento
+                ir = new Intent(events.this, view_event.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                ir.putExtra("idEvent", id_events);
+                startActivity(ir);
 
 
             }
-        });*/
+        });
 
         fbAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-            cargarEventos();
+
 
             }
         });
@@ -114,40 +127,46 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     @Override
     public void onResponse(JSONArray response) {
 
-        msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
-        msj.show();
+        /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
+        msj.show();*/
         mProgressDialog.hide();
-        // Process the JSON
+
         try{
-            // Loop through the array elements
+
             for(int i=0;i<response.length();i++) {
-                // Get current json object
+
                 JSONObject event = response.getJSONObject(i);
 
-                // Get the current student (json object) data
-                idEvent = event.getInt("idEvent");
-                idEventDependency = event.getInt("idEventDependency");
-                dateEvent = event.getString("dateEvent");
-                posGeo = event.getString("posGeo");
                 idForm = event.getInt("idForm");
-                p = event.getJSONObject("p");
+                idEvent = event.getInt("idEvent");
+                keyValue = event.getString("keyValue");
+                dateEventBegin = event.getString("dateEventBegin");
+                dateEventEnd = event.getString("dateEventEnd");
+                personNumber = event.getInt("personNumber");
+                containerNumber = event.getInt("containerNumber");
+                eventState = event.getInt("eventState");
 
-                for(int j=0;j<p.length();j++) {
-
-
-
-                }
-
+                itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm, personNumber, containerNumber, eventState));
 
             }
-        }catch (JSONException e){
+
+            adapter_events adapter = new adapter_events(events.this, itemEvents);
+            lvEvents.setAdapter(adapter);
+
+        }catch (JSONException e) {
+
             e.printStackTrace();
+
         }
 
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
+
+        mProgressDialog.hide();
+        msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
+        msj.show();
 
     }
 

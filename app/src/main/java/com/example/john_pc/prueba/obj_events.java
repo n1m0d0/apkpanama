@@ -2,27 +2,35 @@ package com.example.john_pc.prueba;
 
 public class obj_events {
 
-    protected long id;
+    protected int id;
     protected String variable;
     protected String fecha_inicio;
     protected String fecha_fin;
+    protected int id_from;
+    protected int numero_persona;
+    protected int numero_container;
+    protected int estado_evento;
 
-    public obj_events(long id, String variable, String fecha_inicio, String fecha_fin) {
+    public obj_events(int id, String variable, String fecha_inicio, String fecha_fin, int id_from, int numero_persona, int numero_container, int estado_evento) {
 
         this.id = id;
         this.variable = variable;
         this.fecha_inicio = fecha_inicio;
         this.fecha_fin = fecha_fin;
+        this.id_from = id_from;
+        this.numero_persona = numero_persona;
+        this.numero_container = numero_container;
+        this.estado_evento = estado_evento;
 
     }
 
-    public long getId() {
+    public int getId() {
 
         return id;
 
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
 
         this.id = id;
 
@@ -61,6 +69,54 @@ public class obj_events {
     public void setFecha_fin(String fecha_fin) {
 
         this.fecha_fin = fecha_fin;
+
+    }
+
+    public int getId_from() {
+
+        return id_from;
+
+    }
+
+    public void setId_from(int id_from) {
+
+        this.id_from = id_from;
+
+    }
+
+    public int getNumero_persona() {
+
+        return numero_persona;
+
+    }
+
+    public void setNumero_persona(int numero_persona) {
+
+        this.numero_persona = numero_persona;
+
+    }
+
+    public int getNumero_container() {
+
+        return numero_container;
+
+    }
+
+    public void setNumero_container(int numero_container) {
+
+        this.numero_container = numero_container;
+
+    }
+
+    public int getEstado_evento() {
+
+        return estado_evento;
+
+    }
+
+    public void setEstado_evento(int estado_evento) {
+
+        this.estado_evento = estado_evento;
 
     }
 

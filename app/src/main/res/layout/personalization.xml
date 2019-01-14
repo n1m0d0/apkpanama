@@ -3,65 +3,126 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:weightSum="10">
-
-    <ImageView
-        android:src="@drawable/password"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_weight="8"/>
+    android:gravity="center"
+    android:weightSum="10"
+    android:id="@+id/ll0001">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_weight="2"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="123456"
+            android:id="@+id/tvIdEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="123456"
+            android:id="@+id/tvKeyValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="234567"
+            android:id="@+id/tvDateEventBegin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="3456789"
+            android:id="@+id/tvDateEventEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
         android:orientation="vertical"
         android:gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:weightSum="12"
             android:orientation="horizontal"
-            android:weightSum="10">
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/iv0001"
+                android:src="@drawable/password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="3"/>
 
             <TextView
-                android:id="@+id/tvId"
-                android:text="@string/send"
-                android:layout_width="wrap_content"
+                android:text="10"
+                android:id="@+id/tv0001"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"/>
+                android:layout_weight="3
+"/>
+
+            <ImageView
+                android:id="@+id/iv0002"
+                android:src="@drawable/password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="3"/>
 
             <TextView
-                android:id="@+id/tvValues"
-                android:text="@string/send"
-                android:layout_width="wrap_content"
+                android:text="10"
+                android:id="@+id/tv0002"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"/>
+                android:layout_weight="3"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:weightSum="12"
             android:orientation="horizontal"
-            android:weightSum="10">
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/iv0003"
+                android:src="@drawable/password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="3"/>
 
             <TextView
-                android:id="@+id/tvStartDate"
-                android:text="@string/send"
-                android:layout_width="wrap_content"
+                android:text="10"
+                android:id="@+id/tv0003"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"/>
+                android:layout_weight="3"/>
+
+            <ImageView
+                android:id="@+id/iv0004"
+                android:src="@drawable/password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="3"/>
 
             <TextView
-                android:id="@+id/tvEndDate"
-                android:text="@string/send"
-                android:layout_width="wrap_content"
+                android:text="10"
+                android:id="@+id/tv0004"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"/>
+                android:layout_weight="3"/>
 
         </LinearLayout>
-
+        
     </LinearLayout>
 
 </LinearLayout>

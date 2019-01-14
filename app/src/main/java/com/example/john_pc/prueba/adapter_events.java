@@ -15,6 +15,11 @@ public class adapter_events extends BaseAdapter {
     protected Activity activity;
     protected ArrayList<obj_events> items;
 
+    public adapter_events(Activity activity, ArrayList<obj_events> items) {
+        this.activity = activity;
+        this.items = items;
+    }
+
     @Override
     public int getCount() {
         return items.size();
@@ -44,17 +49,49 @@ public class adapter_events extends BaseAdapter {
 
         obj_events item = items.get(position);
 
-        TextView id = vi.findViewById(R.id.tvId);
+        TextView id = vi.findViewById(R.id.tvIdEvent);
         id.setText(""+item.getId());
 
-        TextView values = vi.findViewById(R.id.tvValues);
+        TextView values = vi.findViewById(R.id.tvKeyValue);
         values.setText(item.getVariable());
 
-        TextView startDate = vi.findViewById(R.id.tvStartDate);
+        TextView startDate = vi.findViewById(R.id.tvDateEventBegin);
         startDate.setText(item.getFecha_inicio());
 
-        TextView endDate = vi.findViewById(R.id.tvEndDate);
+        TextView endDate = vi.findViewById(R.id.tvDateEventEnd);
         endDate.setText(item.getFecha_fin());
+
+        /*if(item.getId_from() == 1) {
+
+
+
+        } else {
+
+            if(item.getId_from() == 2) {
+
+
+
+            } else {
+
+                if(item.getId_from() == 3) {
+
+
+
+                } else {
+
+
+
+                }
+
+            }
+
+        }
+
+        TextView tv0003 = vi.findViewById(R.id.tv0003);
+        tv0003.setText(item.getNumero_persona());
+
+        TextView tv0004 = vi.findViewById(R.id.tv0004);
+        tv0004.setText(item.getNumero_container());*/
 
         return vi;
     }
