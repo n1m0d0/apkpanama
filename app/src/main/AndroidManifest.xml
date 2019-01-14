@@ -23,7 +23,8 @@
         <activity android:name=".events" />
         <activity android:name=".form_event" />
         <activity android:name=".view_event" />
-        <activity android:name=".checkout"></activity>
+        <activity android:name=".checkout" />
+        <activity android:name=".forms"></activity>
     </application>
 
 </manifest>

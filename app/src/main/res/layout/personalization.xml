@@ -14,9 +14,12 @@
         android:orientation="vertical">
 
         <TextView
+            android:background="@color/colorHeader"
+            android:gravity="center"
             android:text="123456"
+            android:textColor="@color/colorWhite"
             android:id="@+id/tvIdEvent"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
