@@ -129,9 +129,6 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
                 typeDependency = form.getInt("typeDependency");
 
                 itemForms.add(new obj_form(idForm, colorForm, descriptionForm, idIconForm, positionForm, typeDependency));
-                                /*
-                itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm, personNumber, containerNumber, eventState));
-                */
 
             }
 

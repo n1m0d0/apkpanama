@@ -4,7 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".form_event"
-    android:id="@+id/llContenedor">
+    tools:context=".form_event">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:padding="@dimen/separation"
+            android:layout_margin="@dimen/separation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/llContenedor">
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

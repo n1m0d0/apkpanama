@@ -6,11 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class form_event extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
@@ -40,6 +46,8 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
     String url = "https://test.portcolon2000.site/api/parFormFields/";
+    String urlParametros = "https://test.portcolon2000.site/api/parGeneral/";
+    String urlParametros2;
     Intent ir;
     Toast msj;
     ArrayList<EditText> editTexts = new ArrayList<EditText>();
@@ -60,9 +68,6 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         idForm = parametros.getString("idForm");
-
-        msj = Toast.makeText(this, "idFrom: " + idForm, Toast.LENGTH_LONG);
-        msj.show();
 
         url = url + idForm;
 
@@ -98,8 +103,8 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     @Override
     public void onResponse(JSONArray response) {
 
-        msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
-        msj.show();
+        /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
+        msj.show();*/
         mProgressDialog.hide();
 
         try{
@@ -108,17 +113,17 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
                 JSONObject form = response.getJSONObject(i);
 
-                int idFile = form.getInt("IDFILE");
+                int idField = form.getInt("IDFIELD");
                 String name = form.getString("NAME");
                 String description = form.getString("DESCRIPTION");
                 int position = form.getInt("POSITION");
                 int type = form.getInt("TYPE");
                 int idparameter = form.getInt("IDPARAMETER");
                 int input_max = form.getInt("INPUT_MAX");
-                int input_regx = form.getInt("INPUT_REGEX");
+                String input_regx = form.getString("INPUT_REGEX");
                 int input_datemin = form.getInt("INPUT_DATEMIN");
                 int input_datemax = form.getInt("INPUT_DATEMAX");
-                int photo_resolution = form.getInt("PHOTO_RESOLUTION");
+                String photo_resolution = form.getString("PHOTO_RESOLUTION");
                 int file_size = form.getInt("FILE_SIZE");
                 int reg_begin = form.getInt("REG_BEGIN");
                 int reg_end = form.getInt("REG_END");
@@ -129,13 +134,44 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                 switch (type) {
 
                     case 1:
+
+                        crearedittext(idField," ",20);
+
                         break;
 
                     case 2:
+
+                        crearedittextmultilinea(idField," ",254);
+
                         break;
 
                     case 3:
                         break;
+
+                    case 4:
+                        break;
+
+                    case 5:
+                        break;
+
+                    case 6:
+                        break;
+
+                    case 7:
+                        break;
+
+                    case 8:
+
+                        /*urlParametros2 = urlParametros + idparameter;
+                        cargarParametros();*/
+                        crearspinner(idField);
+
+
+                        break;
+
+                    case 9:
+                        break;
+
 
                     default:
                         break;
@@ -147,8 +183,8 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
         }catch (JSONException e) {
 
             e.printStackTrace();
-            msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
-            msj.show();
+            /*msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
+            msj.show();*/
 
         }
 
@@ -158,8 +194,71 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     public void onErrorResponse(VolleyError error) {
 
         mProgressDialog.hide();
-        msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
-        msj.show();
+        /*msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
+        msj.show();*/
+
+    }
+
+    private void cargarParametros(){
+
+        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.show();
+
+        Log.w("urlParametros", urlParametros2);
+
+        mRequestQueue = Volley.newRequestQueue(this);
+
+        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, urlParametros2, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+                /*msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
+                msj.show();*/
+                mProgressDialog.hide();
+
+                try{
+
+                    for(int i=0;i<response.length();i++) {
+
+                        JSONObject parameter = response.getJSONObject(i);
+                        int value = parameter.getInt("value");
+                        String description = parameter.getString("description");
+
+                    }
+
+                }catch (JSONException e) {
+
+                    e.printStackTrace();
+                    msj = Toast.makeText(form_event.this, "" + e, Toast.LENGTH_LONG);
+                    msj.show();
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                mProgressDialog.hide();
+                msj = Toast.makeText(form_event.this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
+                msj.show();
+
+            }
+        }){
+
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+
+                HashMap headers = new HashMap();
+                headers.put("Authorization", auth); //authentication
+                return headers;
+
+            }
+
+        };
+
+        mRequestQueue.add(mJsonArrayRequest);
 
     }
 
@@ -180,16 +279,63 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
     public void crearedittext(int id_opcion, String opcion, int descripcion) {
 
+
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
-        et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-        et.setPadding(2, 2, 2, 2);
-        et.setHint(opcion);
+        //et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+        //et.setPadding(2, 2, 2, 2);
+        //et.setHint(opcion);
         et.setId(id_opcion);
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
         et.setFilters(ifet);
         llContenedor.addView(et);
+        editTexts.add(et);
+
+    }
+
+    // crear edittext multininea en el contenedor
+
+    public void crearedittextmultilinea(int id_opcion, String opcion, int descripcion) {
+
+        EditText et = new EditText(this);
+        et.setSingleLine(false);
+        et.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        et.setLines(5);
+        et.setMaxLines(10);
+        et.setVerticalScrollBarEnabled(true);
+        et.setMovementMethod(ScrollingMovementMethod.getInstance());
+        et.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+        //et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+        //et.setPadding(2, 2, 2, 2);
+        //et.setHint(opcion);
+        et.setId(id_opcion);
+        InputFilter[] ifet = new InputFilter[1];
+        ifet[0] = new InputFilter.LengthFilter(descripcion);
+        et.setFilters(ifet);
+        llContenedor.addView(et);
+        editTexts.add(et);
+
+    }
+
+    // crear edittext datetami en el contenedor
+
+    public void crearedittextdate(int id_opcion, String opcion, int descripcion) {
+
+
+        EditText et = new EditText(this);
+        et.setInputType(InputType.TYPE_CLASS_TEXT);
+        //et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+        //et.setPadding(2, 2, 2, 2);
+        //et.setHint(opcion);
+        et.setId(id_opcion);
+        InputFilter[] ifet = new InputFilter[1];
+        ifet[0] = new InputFilter.LengthFilter(descripcion);
+        et.setFilters(ifet);
+        llContenedor.addView(et);
+
+
         editTexts.add(et);
 
     }
@@ -216,6 +362,15 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
         cb.setId(id_opcion);
         llContenedor.addView(cb);
         checkBoxs.add(cb);
+
+    }
+
+    // crear spinner en el contenedor
+
+    public  void crearspinner(int id_opcion) {
+
+        Spinner sp = new Spinner(this);
+        llContenedor.addView(sp);
 
     }
 
