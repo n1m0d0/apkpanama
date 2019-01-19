@@ -2,6 +2,7 @@ package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -10,6 +11,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -33,7 +35,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class form_event extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
@@ -53,8 +54,6 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     ArrayList<EditText> editTexts = new ArrayList<EditText>();
     ArrayList<CheckBox> checkBoxs = new ArrayList<CheckBox>();
     ArrayList<RadioGroup> radioGroups = new ArrayList<RadioGroup>();
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +145,10 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                         break;
 
                     case 3:
+
+                        urlParametros2 = urlParametros + idparameter;
+                        new crearspinner2().execute();
+
                         break;
 
                     case 4:
@@ -164,7 +167,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
                         /*urlParametros2 = urlParametros + idparameter;
                         cargarParametros();*/
-                        crearspinner(idField);
+                        //crearspinner(idField);
 
 
                         break;
@@ -199,11 +202,13 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
     }
 
-    private void cargarParametros(){
+    private ArrayList<String> cargarParametros(){
 
-        mProgressDialog =  new ProgressDialog(this);
+        /*mProgressDialog =  new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
-        mProgressDialog.show();
+        mProgressDialog.show();*/
+
+        final ArrayList<String> miarray = new ArrayList<>();
 
         Log.w("urlParametros", urlParametros2);
 
@@ -213,9 +218,10 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
             @Override
             public void onResponse(JSONArray response) {
 
-                /*msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
-                msj.show();*/
-                mProgressDialog.hide();
+                msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
+                msj.show();
+                Log.w("respuesta", "" + response);
+                //mProgressDialog.hide();
 
                 try{
 
@@ -224,6 +230,8 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                         JSONObject parameter = response.getJSONObject(i);
                         int value = parameter.getInt("value");
                         String description = parameter.getString("description");
+
+                        miarray.add(description);
 
                     }
 
@@ -240,7 +248,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                mProgressDialog.hide();
+                //mProgressDialog.hide();
                 msj = Toast.makeText(form_event.this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
                 msj.show();
 
@@ -260,6 +268,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
         mRequestQueue.add(mJsonArrayRequest);
 
+        return miarray;
     }
 
     // crear textview en el contenedor
@@ -370,8 +379,72 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     public  void crearspinner(int id_opcion) {
 
         Spinner sp = new Spinner(this);
+        sp.setId(id_opcion);
+        ArrayList<String> miarray = new ArrayList<>();
+        miarray = cargarParametros();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, miarray);
+        sp.setAdapter(adapter);
         llContenedor.addView(sp);
 
     }
+
+    private class crearspinner2 extends AsyncTask<String, String, Integer> {
+
+        Spinner sp = new Spinner(form_event.this);
+        ArrayList<String> miarray = new ArrayList<>();
+
+        protected void onPreExecute() {
+
+
+
+        }
+
+        protected Integer doInBackground(String... urls) {
+
+            miarray = cargarParametros();
+
+            return 250;
+        }
+
+        protected void onProgressUpdate (Float... valores) {
+
+        }
+
+        protected void onPostExecute(Integer bytes) {
+
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(form_event.this,
+                    android.R.layout.simple_spinner_item, miarray);
+            sp.setAdapter(adapter);
+            llContenedor.addView(sp);
+        }
+    }
+
+
+    /*private class MiTarea extends AsyncTask<String, String, Integer>{
+
+        protected void onPreExecute() {
+
+
+
+        }
+
+        protected Integer doInBackground(String... urls) {
+
+            cargarParametros();
+
+            return 250;
+        }
+
+        protected void onProgressUpdate (Float... valores) {
+
+        }
+
+        protected void onPostExecute(Integer bytes) {
+
+            //mProgressDialog.hide();
+        }
+    }*/
 
 }
