@@ -1,17 +1,25 @@
 package com.example.john_pc.prueba;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -33,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +63,11 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     ArrayList<EditText> editTexts = new ArrayList<EditText>();
     ArrayList<CheckBox> checkBoxs = new ArrayList<CheckBox>();
     ArrayList<RadioGroup> radioGroups = new ArrayList<RadioGroup>();
+    ArrayList<Spinner> Spinners = new ArrayList<Spinner>();
+    Bitmap bit;
+    Uri output;
+    String path;
+    Base64 imgBase64;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,22 +166,53 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                         break;
 
                     case 4:
+
+
+
                         break;
 
                     case 5:
                         break;
 
                     case 6:
+
+                        Button btn;
+                        btn =  new Button(this);
+                        btn.setText("Capturar Foto");
+                        llContenedor.addView(btn);
+                        btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                ir = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                                startActivityForResult(ir, 2);
+
+                            }
+                        });
+
                         break;
 
                     case 7:
+
+                        Button btn2;
+                        btn2 =  new Button(this);
+                        btn2.setText("Elegir Archivo");
+                        llContenedor.addView(btn2);
+                        btn2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+
+
+                            }
+                        });
+
                         break;
 
                     case 8:
 
-                        /*urlParametros2 = urlParametros + idparameter;
-                        cargarParametros();*/
-                        //crearspinner(idField);
+                        urlParametros2 = urlParametros + idparameter;
+                        new crearspinner2().execute();
 
 
                         break;
@@ -335,17 +380,40 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
-        //et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-        //et.setPadding(2, 2, 2, 2);
-        //et.setHint(opcion);
         et.setId(id_opcion);
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
         et.setFilters(ifet);
         llContenedor.addView(et);
-
-
         editTexts.add(et);
+
+        final Calendar myCalendar = Calendar.getInstance();
+
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+
+        et.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(classname.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
 
     }
 
@@ -392,11 +460,12 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     private class crearspinner2 extends AsyncTask<String, String, Integer> {
 
         Spinner sp = new Spinner(form_event.this);
+
         ArrayList<String> miarray = new ArrayList<>();
 
         protected void onPreExecute() {
 
-
+            llContenedor.addView(sp);
 
         }
 
@@ -414,10 +483,9 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
         protected void onPostExecute(Integer bytes) {
 
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(form_event.this,
-                    android.R.layout.simple_spinner_item, miarray);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(form_event.this, android.R.layout.simple_spinner_dropdown_item, miarray);
             sp.setAdapter(adapter);
-            llContenedor.addView(sp);
+            //llContenedor.addView(sp);
         }
     }
 
@@ -446,5 +514,25 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
             //mProgressDialog.hide();
         }
     }*/
+
+    // camara
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if (resultCode== Activity.RESULT_OK){
+
+
+
+        }
+    }
+
+    //direccion del path
+    private String getPath(Uri uri) {
+        String[] projection = { android.provider.MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(android.provider.MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
 
 }
