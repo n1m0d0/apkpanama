@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/spinner_item_selector"
+    android:orientation="horizontal"
+    android:weightSum="10"
+    android:padding="3dp" >
+
+    <ImageView
+        android:id="@+id/ivIcono"
+        android:src="@drawable/flecha"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_weight="9"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/texto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginLeft="6dp"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textSize="15sp" />
+
+</LinearLayout>

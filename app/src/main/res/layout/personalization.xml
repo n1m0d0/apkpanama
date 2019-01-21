@@ -53,38 +53,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:weightSum="12"
             android:orientation="horizontal"
             android:gravity="center">
 
             <ImageView
+                android:gravity="center"
                 android:id="@+id/iv0001"
                 android:src="@drawable/password"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="3"/>
-
-            <TextView
-                android:text="10"
-                android:id="@+id/tv0001"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3
-"/>
-
-            <ImageView
-                android:id="@+id/iv0002"
-                android:src="@drawable/password"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="3"/>
-
-            <TextView
-                android:text="10"
-                android:id="@+id/tv0002"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"/>
+                android:layout_height="50dp"/>
 
         </LinearLayout>
 
@@ -104,6 +81,7 @@
                 android:layout_weight="3"/>
 
             <TextView
+                android:gravity="center"
                 android:text="10"
                 android:id="@+id/tv0003"
                 android:layout_width="match_parent"
@@ -118,6 +96,7 @@
                 android:layout_weight="3"/>
 
             <TextView
+                android:gravity="center"
                 android:text="10"
                 android:id="@+id/tv0004"
                 android:layout_width="match_parent"

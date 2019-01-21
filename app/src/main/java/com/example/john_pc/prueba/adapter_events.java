@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -49,49 +50,51 @@ public class adapter_events extends BaseAdapter {
 
         obj_events item = items.get(position);
 
-        TextView id = vi.findViewById(R.id.tvIdEvent);
-        id.setText(""+item.getId());
+        if(item.estado_evento == 0){
 
-        TextView values = vi.findViewById(R.id.tvKeyValue);
-        values.setText(item.getVariable());
+            TextView id = vi.findViewById(R.id.tvIdEvent);
+            id.setText(""+item.getId());
 
-        TextView startDate = vi.findViewById(R.id.tvDateEventBegin);
-        startDate.setText(item.getFecha_inicio());
+            TextView values = vi.findViewById(R.id.tvKeyValue);
+            values.setText(item.getVariable());
 
-        TextView endDate = vi.findViewById(R.id.tvDateEventEnd);
-        endDate.setText(item.getFecha_fin());
+            TextView startDate = vi.findViewById(R.id.tvDateEventBegin);
+            startDate.setText(item.getFecha_inicio());
 
-        /*if(item.getId_from() == 1) {
+            TextView endDate = vi.findViewById(R.id.tvDateEventEnd);
+            endDate.setText(item.getFecha_fin());
 
+            if (item.id_from == 2){
 
+                ImageView ivImage0003 = vi.findViewById(R.id.iv0003);
+                ivImage0003.setImageResource(R.drawable.usuario);
 
-        } else {
+                TextView tv0003 = vi.findViewById(R.id.tv0003);
+                tv0003.setText("" + item.getNumero_persona());
 
-            if(item.getId_from() == 2) {
+                ImageView ivImage0004 = vi.findViewById(R.id.iv0004);
+                ivImage0004.setImageResource(R.drawable.container);
 
-
+                TextView tv0004 = vi.findViewById(R.id.tv0004);
+                tv0004.setText("" + item.getNumero_container());
 
             } else {
 
-                if(item.getId_from() == 3) {
+                ImageView ivImage0003 = vi.findViewById(R.id.iv0003);
+                ivImage0003.setVisibility(View.GONE);
 
+                TextView tv0003 = vi.findViewById(R.id.tv0003);
+                tv0003.setVisibility(View.GONE);
 
+                ImageView ivImage0004 = vi.findViewById(R.id.iv0004);
+                ivImage0004.setVisibility(View.GONE);
 
-                } else {
-
-
-
-                }
+                TextView tv0004 = vi.findViewById(R.id.tv0004);
+                tv0004.setVisibility(View.GONE);
 
             }
 
         }
-
-        TextView tv0003 = vi.findViewById(R.id.tv0003);
-        tv0003.setText(item.getNumero_persona());
-
-        TextView tv0004 = vi.findViewById(R.id.tv0004);
-        tv0004.setText(item.getNumero_container());*/
 
         return vi;
     }
