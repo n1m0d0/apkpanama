@@ -255,6 +255,24 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                             }
                         });*/
 
+                        Button btncamara =  new Button(this);
+                        btncamara.setText("Capturar Foto");
+                        btncamara.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent camara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                camara.putExtra("thisone", "ArgumentFrom");
+                                Bundle extras = new Bundle();
+                                extras.putBoolean("thisalso", true);
+                                camara.putExtras(extras);
+                                startActivityForResult(camara, 1888);
+
+                            }
+                        });
+                        llContenedor.addView(btncamara);
+
+
                         break;
 
                     case 7:
@@ -576,7 +594,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if (resultCode== Activity.RESULT_OK){
+        if (requestCode == 1888 && resultCode== Activity.RESULT_OK){
 
             Bundle ext = data.getExtras();
             bmp = (Bitmap) ext.get("data");
