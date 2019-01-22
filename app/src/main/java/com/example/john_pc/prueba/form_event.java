@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -17,8 +18,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -42,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +77,9 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     Bitmap bit;
     Uri output;
     String path;
+    Bitmap bmp;
     Base64 imgBase64;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,17 +124,28 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                 for (Iterator iterator = spinners.iterator(); iterator
                         .hasNext();) {
 
-                    int id = 0;
+                    /*int id = 0;
                     Spinner spinner = (Spinner) iterator.next();
 
                     int position = spinner.getSelectedItemPosition();
 
+                    //obj_params elegido = (obj_params) spinner.getSelectedItemPosition();
+
+                    // recuperamos el id
+                    //id_form = "" + elegido.getId();
+
+                    Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position);*/
 
 
-                    Log.w("Spinner", "spinner" + " " + spinner.getId() + " " + position);
+                    Spinner spinner = (Spinner) iterator.next();
+
+                    int position = spinner.getSelectedItemPosition();
+
+                    String aux = "VIKING SKY";
+
+                    Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position);
 
                 }
-
 
             }
         });
@@ -225,7 +240,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
                     case 6:
 
-                        Button btn;
+                        /*Button btn;
                         btn =  new Button(this);
                         btn.setId(idField);
                         btn.setText("Capturar Foto");
@@ -234,17 +249,17 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                             @Override
                             public void onClick(View v) {
 
-                                ir = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                                startActivityForResult(ir, 2);
+                                ir = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(ir, 0);
 
                             }
-                        });
+                        });*/
 
                         break;
 
                     case 7:
 
-                        Button btn2 = null;
+                        /*Button btn2 = null;
                         btn2.setId(idField);
                         btn2 =  new Button(this);
                         btn2.setText("Elegir Archivo");
@@ -256,7 +271,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
 
                             }
-                        });
+                        });*/
 
                         break;
 
@@ -509,6 +524,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
         protected void onPreExecute() {
 
             sp.setId(idField);
+            //sp.setLayoutParams(new LinearLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
             spinners.add(sp);
             llContenedor.addView(sp);
 
@@ -525,7 +541,28 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
         protected void onPostExecute(ArrayList<obj_params> datos) {
 
-            sp.setAdapter(new adapter_params(form_event.this, datos));
+            //sp.setAdapter(new adapter_params(form_event.this, datos));
+            adapter_params adapter = new adapter_params(form_event.this, datos);
+            /*adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp.setPrompt("Select your favorite Planet!");*/
+            sp.setAdapter(adapter);
+
+            /*sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    obj_params elegido = (obj_params) parent.getItemAtPosition(position);
+                    int ids = elegido.getId();
+
+                    Log.w("Spinner", "spinner: " + sp.getId() + " posicion: " + ids);
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });*/
             //llContenedor.addView(sp);
         }
 
@@ -541,7 +578,16 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
         super.onActivityResult(requestCode,resultCode,data);
         if (resultCode== Activity.RESULT_OK){
 
+            Bundle ext = data.getExtras();
+            bmp = (Bitmap) ext.get("data");
 
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            fotos.add(encoded);
 
         }
     }
