@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -141,6 +142,8 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
             msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
             msj.show();
 
+            Log.w("respuesta", "" + e);
+
         }
 
     }
@@ -151,6 +154,8 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         mProgressDialog.hide();
         msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();
+
+        Log.w("respuesta", "" + error);
 
     }
 

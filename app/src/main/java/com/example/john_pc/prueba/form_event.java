@@ -20,11 +20,15 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -124,26 +128,15 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                 for (Iterator iterator = spinners.iterator(); iterator
                         .hasNext();) {
 
-                    /*int id = 0;
                     Spinner spinner = (Spinner) iterator.next();
 
                     int position = spinner.getSelectedItemPosition();
 
-                    //obj_params elegido = (obj_params) spinner.getSelectedItemPosition();
+                    String nombre = spinner.getItemAtPosition(position).toString();
 
-                    // recuperamos el id
-                    //id_form = "" + elegido.getId();
+                    obj_params elegido = (obj_params) spinner.getItemAtPosition(position);
 
-                    Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position);*/
-
-
-                    Spinner spinner = (Spinner) iterator.next();
-
-                    int position = spinner.getSelectedItemPosition();
-
-                    String aux = "VIKING SKY";
-
-                    Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position);
+                    Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position + " " + elegido.getId());
 
                 }
 
@@ -200,12 +193,34 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                 String input_regx = form.getString("INPUT_REGEX");
                 int input_datemin = form.getInt("INPUT_DATEMIN");
                 int input_datemax = form.getInt("INPUT_DATEMAX");
-                String photo_resolution = form.getString("PHOTO_RESOLUTION");
+                //String photo_resolution = form.getString("PHOTO_RESOLUTION");
                 int file_size = form.getInt("FILE_SIZE");
                 int reg_begin = form.getInt("REG_BEGIN");
                 int reg_end = form.getInt("REG_END");
                 int is_mandatory = form.getInt("IS_MANDATORY");
                 int is_keybaule = form.getInt("IS_KEYVALUE");
+
+
+
+                JSONArray opciones = form.getJSONArray("P");
+
+                String [] listopcion = new String[opciones.length()];
+
+                ArrayList<obj_params> itemp = new ArrayList<obj_params>();
+
+                for(int j = 0; j<opciones.length(); j++) {
+
+                    JSONObject op = opciones.getJSONObject(j);
+                    int valor = op.getInt("IDVALUE");
+                    String des = op.getString("DESCRIPTION");
+
+                    listopcion[j] = des;
+
+                    itemp.add(new obj_params(valor,des));
+
+                    Log.w("Description opcion", listopcion[j]);
+
+                }
 
                 creartextview(description);
                 switch (type) {
@@ -224,8 +239,9 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
                     case 3:
 
-                        urlParametros2 = urlParametros + idparameter;
-                        new crearspinner2().execute();
+                        //createSpinner(idField, listopcion);
+                        createSpinner(idField, itemp);
+
 
                         break;
 
@@ -255,6 +271,11 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                             }
                         });*/
 
+                        /*ImageView iv = new ImageView(this);
+                        iv.setId(idField);
+                        iv.setImageResource(R.drawable.ic_launcher_background);
+                        llContenedor.addView(iv);
+
                         Button btncamara =  new Button(this);
                         btncamara.setText("Capturar Foto");
                         btncamara.setOnClickListener(new View.OnClickListener() {
@@ -270,7 +291,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
                             }
                         });
-                        llContenedor.addView(btncamara);
+                        llContenedor.addView(btncamara);*/
 
 
                         break;
@@ -295,9 +316,8 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
                     case 8:
 
-                        urlParametros2 = urlParametros + idparameter;
-                        new crearspinner2().execute();
-
+                        //createSpinner(idField, listopcion);
+                        createSpinner(idField, itemp);
 
                         break;
 
@@ -329,77 +349,6 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
         /*msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();*/
 
-    }
-
-    private ArrayList<obj_params> cargarParametros(){
-
-        /*mProgressDialog =  new ProgressDialog(this);
-        mProgressDialog.setMessage("Cargando...");
-        mProgressDialog.show();*/
-        final ArrayList<obj_params> itemParams = new ArrayList<obj_params>();
-        //final ArrayList<String> miarray = new ArrayList<>();
-
-        Log.w("urlParametros", urlParametros2);
-
-        mRequestQueue = Volley.newRequestQueue(this);
-
-        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, urlParametros2, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-
-                msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
-                msj.show();
-                Log.w("respuesta", "" + response);
-                //mProgressDialog.hide();
-
-                try{
-
-                    for(int i=0;i<response.length();i++) {
-
-                        JSONObject parameter = response.getJSONObject(i);
-                        int value = parameter.getInt("value");
-                        String description = parameter.getString("description");
-
-                        //miarray.add(description);
-                        itemParams.add(new obj_params(value, description));
-
-                    }
-
-                }catch (JSONException e) {
-
-                    e.printStackTrace();
-                    msj = Toast.makeText(form_event.this, "" + e, Toast.LENGTH_LONG);
-                    msj.show();
-
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                //mProgressDialog.hide();
-                msj = Toast.makeText(form_event.this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
-                msj.show();
-
-            }
-        }){
-
-            @Override
-            public Map getHeaders() throws AuthFailureError {
-
-                HashMap headers = new HashMap();
-                headers.put("Authorization", auth); //authentication
-                return headers;
-
-            }
-
-        };
-
-        mRequestQueue.add(mJsonArrayRequest);
-
-        return itemParams;
-        //return miarray;
     }
 
     // crear textview en el contenedor
@@ -531,63 +480,20 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
     }
 
-    // crear spinner en el contenedor
+    // crear un spinner en el contenedor
 
-    private class crearspinner2 extends AsyncTask<String, Integer, ArrayList<obj_params>> {
+    public void createSpinner(int idField, ArrayList<obj_params> aux){
 
-        Spinner sp = new Spinner(form_event.this);
+        //String [] aux = { "nombre1", "nombre2", "nombre3", "nombre4"};
 
-        ArrayList<obj_params> miarray = new ArrayList<>();
-
-        protected void onPreExecute() {
-
-            sp.setId(idField);
-            //sp.setLayoutParams(new LinearLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
-            spinners.add(sp);
-            llContenedor.addView(sp);
-
-        }
-
-        protected ArrayList<obj_params> doInBackground(String... params) {
-
-            //String idsp = params[1];
-            //Log.w("idfield", idsp);
-            miarray = cargarParametros();
-
-            return miarray;
-        }
-
-        protected void onPostExecute(ArrayList<obj_params> datos) {
-
-            //sp.setAdapter(new adapter_params(form_event.this, datos));
-            adapter_params adapter = new adapter_params(form_event.this, datos);
-            /*adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sp.setPrompt("Select your favorite Planet!");*/
-            sp.setAdapter(adapter);
-
-            /*sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    obj_params elegido = (obj_params) parent.getItemAtPosition(position);
-                    int ids = elegido.getId();
-
-                    Log.w("Spinner", "spinner: " + sp.getId() + " posicion: " + ids);
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });*/
-            //llContenedor.addView(sp);
-        }
-
-        protected void onProgressUpdate (Integer... values) {
-
-        }
-
+        Spinner sp = new Spinner(this);
+        sp.setId(idField);
+        adapter_params adapter = new adapter_params(form_event.this, aux);
+        sp.setAdapter(adapter);
+        /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, aux);
+        sp.setAdapter(adapter);*/
+        spinners.add(sp);
+        llContenedor.addView(sp);
     }
 
     // camara
@@ -604,8 +510,6 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
             byte[] byteArray = byteArrayOutputStream .toByteArray();
 
             String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-            fotos.add(encoded);
 
         }
     }

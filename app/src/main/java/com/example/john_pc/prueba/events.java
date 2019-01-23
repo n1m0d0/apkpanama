@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -170,6 +171,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         mProgressDialog.hide();
         msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();
+        Log.w("respuesta", "" + error);
 
     }
 

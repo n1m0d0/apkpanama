@@ -49,7 +49,7 @@ public class adapter_params extends ArrayAdapter<obj_params>{
 
         if(datos != null) {
 
-            ivImg.setImageResource(R.drawable.usuario);
+            ivImg.setImageResource(R.drawable.flecha);
             tvText.setText(datos.getDescription());
 
         }
