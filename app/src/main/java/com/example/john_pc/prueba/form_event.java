@@ -41,6 +41,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -56,7 +57,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-public class form_event extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
+public class form_event extends AppCompatActivity{
 
     int idField;
     String auth;
@@ -67,7 +68,9 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
+
     String url = "https://test.portcolon2000.site/api/parFormFields/";
+    String url2 = "https://test.portcolon2000.site/api/saveEvent";
     String urlParametros = "https://test.portcolon2000.site/api/parGeneral/";
     String urlParametros2;
     Intent ir;
@@ -83,7 +86,7 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
     String path;
     Bitmap bmp;
     Base64 imgBase64;
-
+    JSONObject jsonenvio = new JSONObject();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,10 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
             @Override
             public void onClick(View v) {
 
+
+
+                JSONArray respuesta = new JSONArray();
+
                 for (Iterator iterator = editTexts.iterator(); iterator
                         .hasNext();) {
 
@@ -122,6 +129,17 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                     }
 
                     Log.w("Edit", "editText" + " " + editText.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", editText.getId());
+                        parametros.put("valueInputField", obs_respuesta);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -138,7 +156,36 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
                     Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position + " " + elegido.getId());
 
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", spinner.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", elegido.getId());
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
+
+                Log.w("json", "" + respuesta);
+                try {
+                    jsonenvio.put("idEvent", "0");
+                    jsonenvio.put("idEventDependency", "0");
+                    jsonenvio.put("dateEvent", "2019-01-08 12:30:15");
+                    jsonenvio.put("posGeo", "123456789");
+                    jsonenvio.put("idForm", idForm);
+                    jsonenvio.put("P", respuesta);
+
+                    Log.w("json", "" + jsonenvio);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                enviarformulario();
 
             }
         });
@@ -153,108 +200,90 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET,url,null, this, this){
-
+        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
-            public Map getHeaders() throws AuthFailureError {
-
-                HashMap headers = new HashMap();
-                headers.put("Authorization", auth); //authentication
-                return headers;
-
-            }
-
-        };
-
-        mRequestQueue.add(mJsonArrayRequest);
-
-    }
-
-    @Override
-    public void onResponse(JSONArray response) {
+            public void onResponse(JSONArray response) {
 
         /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
         msj.show();*/
-        mProgressDialog.hide();
+                mProgressDialog.hide();
 
-        try{
+                try {
 
-            for(int i=0;i<response.length();i++) {
+                    for (int i = 0; i < response.length(); i++) {
 
-                JSONObject form = response.getJSONObject(i);
+                        JSONObject form = response.getJSONObject(i);
 
-                idField = form.getInt("IDFIELD");
-                String name = form.getString("NAME");
-                String description = form.getString("DESCRIPTION");
-                int position = form.getInt("POSITION");
-                int type = form.getInt("TYPE");
-                int idparameter = form.getInt("IDPARAMETER");
-                int input_max = form.getInt("INPUT_MAX");
-                String input_regx = form.getString("INPUT_REGEX");
-                int input_datemin = form.getInt("INPUT_DATEMIN");
-                int input_datemax = form.getInt("INPUT_DATEMAX");
-                //String photo_resolution = form.getString("PHOTO_RESOLUTION");
-                int file_size = form.getInt("FILE_SIZE");
-                int reg_begin = form.getInt("REG_BEGIN");
-                int reg_end = form.getInt("REG_END");
-                int is_mandatory = form.getInt("IS_MANDATORY");
-                int is_keybaule = form.getInt("IS_KEYVALUE");
-
-
-
-                JSONArray opciones = form.getJSONArray("P");
-
-                String [] listopcion = new String[opciones.length()];
-
-                ArrayList<obj_params> itemp = new ArrayList<obj_params>();
-
-                for(int j = 0; j<opciones.length(); j++) {
-
-                    JSONObject op = opciones.getJSONObject(j);
-                    int valor = op.getInt("IDVALUE");
-                    String des = op.getString("DESCRIPTION");
-
-                    listopcion[j] = des;
-
-                    itemp.add(new obj_params(valor,des));
-
-                    Log.w("Description opcion", listopcion[j]);
-
-                }
-
-                creartextview(description);
-                switch (type) {
-
-                    case 1:
-
-                        crearedittext(idField," ",20);
-
-                        break;
-
-                    case 2:
-
-                        crearedittextmultilinea(idField," ",254);
-
-                        break;
-
-                    case 3:
-
-                        //createSpinner(idField, listopcion);
-                        createSpinner(idField, itemp);
+                        idField = form.getInt("IDFIELD");
+                        String name = form.getString("NAME");
+                        String description = form.getString("DESCRIPTION");
+                        int position = form.getInt("POSITION");
+                        int type = form.getInt("TYPE");
+                        int idparameter = form.getInt("IDPARAMETER");
+                        int input_max = form.getInt("INPUT_MAX");
+                        String input_regx = form.getString("INPUT_REGEX");
+                        int input_datemin = form.getInt("INPUT_DATEMIN");
+                        int input_datemax = form.getInt("INPUT_DATEMAX");
+                        //String photo_resolution = form.getString("PHOTO_RESOLUTION");
+                        int file_size = form.getInt("FILE_SIZE");
+                        int reg_begin = form.getInt("REG_BEGIN");
+                        int reg_end = form.getInt("REG_END");
+                        int is_mandatory = form.getInt("IS_MANDATORY");
+                        int is_keybaule = form.getInt("IS_KEYVALUE");
 
 
-                        break;
+                        JSONArray opciones = form.getJSONArray("P");
 
-                    case 4:
+                        String[] listopcion = new String[opciones.length()];
+
+                        ArrayList<obj_params> itemp = new ArrayList<obj_params>();
+
+                        for (int j = 0; j < opciones.length(); j++) {
+
+                            JSONObject op = opciones.getJSONObject(j);
+                            int valor = op.getInt("IDVALUE");
+                            String des = op.getString("DESCRIPTION");
+
+                            listopcion[j] = des;
+
+                            itemp.add(new obj_params(valor, des));
+
+                            Log.w("Description opcion", listopcion[j]);
+
+                        }
+
+                        creartextview(description);
+                        switch (type) {
+
+                            case 1:
+
+                                crearedittext(idField, " ", 20);
+
+                                break;
+
+                            case 2:
+
+                                crearedittextmultilinea(idField, " ", 254);
+
+                                break;
+
+                            case 3:
+
+                                //createSpinner(idField, listopcion);
+                                createSpinner(idField, itemp);
 
 
+                                break;
 
-                        break;
+                            case 4:
 
-                    case 5:
-                        break;
 
-                    case 6:
+                                break;
+
+                            case 5:
+                                break;
+
+                            case 6:
 
                         /*Button btn;
                         btn =  new Button(this);
@@ -294,9 +323,9 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                         llContenedor.addView(btncamara);*/
 
 
-                        break;
+                                break;
 
-                    case 7:
+                            case 7:
 
                         /*Button btn2 = null;
                         btn2.setId(idField);
@@ -312,42 +341,60 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
                             }
                         });*/
 
-                        break;
+                                break;
 
-                    case 8:
+                            case 8:
 
-                        //createSpinner(idField, listopcion);
-                        createSpinner(idField, itemp);
+                                //createSpinner(idField, listopcion);
+                                createSpinner(idField, itemp);
 
-                        break;
+                                break;
 
-                    case 9:
-                        break;
+                            case 9:
+                                break;
 
 
-                    default:
-                        break;
+                            default:
+                                break;
+
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
+            /*msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
+            msj.show();*/
 
                 }
 
             }
 
-        }catch (JSONException e) {
 
-            e.printStackTrace();
-            /*msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
-            msj.show();*/
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
-        }
-
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-
-        mProgressDialog.hide();
+                mProgressDialog.hide();
         /*msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();*/
+
+            }
+        }){
+
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+
+                HashMap headers = new HashMap();
+                headers.put("Authorization", auth); //authentication
+                return headers;
+
+            }
+
+        };
+
+        mRequestQueue.add(mJsonArrayRequest);
 
     }
 
@@ -521,6 +568,54 @@ public class form_event extends AppCompatActivity implements Response.Listener<J
         int column_index = cursor.getColumnIndexOrThrow(android.provider.MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
+    }
+
+    private void enviarformulario(){
+
+        Log.w("url", url2);
+
+        JsonObjectRequest mjsonObjectRequest;
+
+        RequestQueue mRequestQueue2;
+
+        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.show();
+
+        mRequestQueue2 = Volley.newRequestQueue(this);
+
+        mjsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url2, jsonenvio, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                Log.w("mio", "" + response);
+                msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
+                msj.show();
+                mProgressDialog.hide();
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.w("mio", "" + error);
+                mProgressDialog.hide();
+
+            }
+        }){
+
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Authorization", auth); //authentication
+                return headers;
+            }
+
+        };
+
+        mRequestQueue2.add(mjsonObjectRequest);
+
     }
 
 }
