@@ -1,14 +1,21 @@
 package com.example.john_pc.prueba;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -18,17 +25,12 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -49,6 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,9 +60,13 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-public class form_event extends AppCompatActivity{
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+public class form_event extends AppCompatActivity implements View.OnClickListener {
 
     int idField;
+    int opcion;
     String auth;
     String userName;
     String idForm;
@@ -68,6 +75,10 @@ public class form_event extends AppCompatActivity{
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
+
+    private final String camara_raiz = "misImagenesSistema/";
+    private final String ruta_imagen = camara_raiz + "misFotos";
+    String path;
 
     String url = "https://test.portcolon2000.site/api/parFormFields/";
     String url2 = "https://test.portcolon2000.site/api/saveEvent";
@@ -79,11 +90,11 @@ public class form_event extends AppCompatActivity{
     ArrayList<CheckBox> checkBoxs = new ArrayList<CheckBox>();
     ArrayList<RadioGroup> radioGroups = new ArrayList<RadioGroup>();
     ArrayList<Spinner> spinners = new ArrayList<Spinner>();
+    ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
     ArrayList<String> fotos = new ArrayList<String>();
     ArrayList<String> archivos = new ArrayList<String>();
     Bitmap bit;
     Uri output;
-    String path;
     Bitmap bmp;
     Base64 imgBase64;
     JSONObject jsonenvio = new JSONObject();
@@ -101,6 +112,8 @@ public class form_event extends AppCompatActivity{
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         idForm = parametros.getString("idForm");
+
+        validarPermisos();
 
         url = url + idForm;
 
@@ -285,43 +298,7 @@ public class form_event extends AppCompatActivity{
 
                             case 6:
 
-                        /*Button btn;
-                        btn =  new Button(this);
-                        btn.setId(idField);
-                        btn.setText("Capturar Foto");
-                        llContenedor.addView(btn);
-                        btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                ir = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(ir, 0);
-
-                            }
-                        });*/
-
-                        /*ImageView iv = new ImageView(this);
-                        iv.setId(idField);
-                        iv.setImageResource(R.drawable.ic_launcher_background);
-                        llContenedor.addView(iv);
-
-                        Button btncamara =  new Button(this);
-                        btncamara.setText("Capturar Foto");
-                        btncamara.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                Intent camara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                camara.putExtra("thisone", "ArgumentFrom");
-                                Bundle extras = new Bundle();
-                                extras.putBoolean("thisalso", true);
-                                camara.putExtras(extras);
-                                startActivityForResult(camara, 1888);
-
-                            }
-                        });
-                        llContenedor.addView(btncamara);*/
-
+                                createImageView(idField);
 
                                 break;
 
@@ -543,22 +520,22 @@ public class form_event extends AppCompatActivity{
         llContenedor.addView(sp);
     }
 
-    // camara
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == 1888 && resultCode== Activity.RESULT_OK){
+    // Crear imageview en el contenedor
 
-            Bundle ext = data.getExtras();
-            bmp = (Bitmap) ext.get("data");
+    public void createImageView(int idField){
 
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream .toByteArray();
+        ImageView iv = new ImageView(this);
+        iv.setId(idField);
+        //setting image resource
+        iv.setImageResource(R.drawable.camera);
 
-            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
+        iv.setLayoutParams(lp);
+        llContenedor.addView(iv);
+        imageViews.add(iv);
 
-        }
+        iv.setOnClickListener(this);
+
     }
 
     //direccion del path
@@ -615,6 +592,208 @@ public class form_event extends AppCompatActivity{
         };
 
         mRequestQueue2.add(mjsonObjectRequest);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        msj = Toast.makeText(this, "" + v.getId(), Toast.LENGTH_LONG);
+        msj.show();
+
+        opcion = v.getId();
+
+        boolean usarCamara = false;
+
+        for(Iterator iterator = imageViews.iterator(); iterator
+                .hasNext();) {
+
+            ImageView imageView = (ImageView) iterator.next();
+
+            if(imageView.getId() == opcion) {
+
+                usarCamara = true;
+
+            }
+
+            Log.w("Edit", imageView.getId() + " = " + opcion);
+
+
+        }
+
+        if(usarCamara == true) {
+
+            tomarFotografia();
+
+        }
+
+
+
+    }
+
+    // camara
+
+    private void tomarFotografia() {
+
+        /*File fileImagen = new File(Environment.getExternalStorageDirectory(), ruta_imagen);
+        boolean isCreada = fileImagen.exists();
+        String nombreImagen = "";
+
+        if(isCreada == false) {
+
+            isCreada = fileImagen.mkdir();
+
+        }
+
+        if(isCreada == true) {
+
+            nombreImagen = (System.currentTimeMillis()/1000) + ".jpg";
+
+        }
+
+        path = Environment.getExternalStorageDirectory() + File.separator + ruta_imagen + File.separator + nombreImagen;
+
+        File imagen =  new File(path);*/
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagen));
+        startActivityForResult(intent, 20);
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if (resultCode== RESULT_OK){
+
+
+            /*MediaScannerConnection.scanFile(this, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener() {
+                @Override
+                public void onScanCompleted(String path, Uri uri) {
+
+                    Log.i("Ruta de almacenamiento", "path: " + path);
+
+                }
+            });
+
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            ImageView iv = findViewById(opcion);
+            iv.setImageBitmap(bitmap);*/
+
+
+            Bundle ext = data.getExtras();
+            bmp = (Bitmap) ext.get("data");
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            ImageView iv = findViewById(opcion);
+            iv.setImageBitmap(bmp);
+
+        }
+    }
+
+    private boolean validarPermisos(){
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+
+            return true;
+
+        }
+        if((checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+
+            return true;
+
+        }
+
+        if ((shouldShowRequestPermissionRationale(CAMERA))||(shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))) {
+
+            cargardialogo();
+
+        }
+        else {
+
+            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, CAMERA}, 100);
+
+        }
+
+        return false;
+
+    }
+
+    private void cargardialogo(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+        builder.setTitle("Permisos Desactivados");
+        builder.setMessage("Debe aceptar los permisos para el correcto funcionamiento de la App");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, CAMERA}, 100);
+                }
+
+            }
+        });
+        builder.show();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == 100) {
+
+            if(grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+
+
+            } else {
+
+                cargardialogo2();
+
+            }
+
+        }
+
+    }
+
+    private void cargardialogo2(){
+
+        final CharSequence[] op = {"si", "no"};
+        final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+        builder.setTitle("Desea configurar los permisos manualmente?");
+        builder.setItems(op, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if(op[which].equals("si")){
+
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent .setData(uri);
+                    startActivity(intent);
+
+                }
+                else {
+
+                    msj = Toast.makeText(form_event.this, "los permisos no fueron aceptados", Toast.LENGTH_LONG);
+                    msj.show();
+                    dialog.dismiss();
+
+                }
+
+            }
+        });
+        builder.show();
 
     }
 
