@@ -32,8 +32,10 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -90,7 +92,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<RadioGroup> radioGroups = new ArrayList<RadioGroup>();
     ArrayList<Spinner> spinners = new ArrayList<Spinner>();
     ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
-    ArrayList<String> fotos = new ArrayList<String>();
+    ArrayList<ToggleButton> toggleButtons = new ArrayList<ToggleButton>();
+    ArrayList<Switch> switches = new ArrayList<Switch>();
     ArrayList<String> archivos = new ArrayList<String>();
     Bitmap bit;
     Uri output;
@@ -188,6 +191,28 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     }
 
                 }
+
+                for (Iterator iterator = switches.iterator(); iterator
+                        .hasNext();) {
+
+                    Switch s = (Switch) iterator.next();
+
+
+                    Log.w("Switch", "switches" + " " + s.getId() + " " + s.isChecked());
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", s.getId());
+                        parametros.put("valueInputField", s.isChecked());
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
 
                 for (Iterator iterator = imageViews.iterator(); iterator
                         .hasNext();) {
@@ -365,6 +390,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                                 break;
 
                             case 9:
+
+                                createSwitch(idField);
+
                                 break;
 
 
@@ -518,13 +546,65 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // crear radiobutton en el contenedor
 
-    public void crearradiobutton(RadioGroup rg, int id_opcion, String opcion) {
+    public void crearradiobutton(int idField, ArrayList<obj_params> items) {
 
-        RadioButton rb = new RadioButton(this);
-        rb.setText(opcion);
-        rb.setTextColor(getResources().getColor(R.color.colorBlack));
-        rb.setId(id_opcion);
-        rg.addView(rb);
+        RadioGroup rg = new RadioGroup(this);
+        rg.setId(idField);
+
+        Log.w("RadioButton", "llegue aqui");
+
+        Log.w("RadioButton", "" + items);
+
+        for (Iterator iterator = items.iterator(); iterator
+                .hasNext();) {
+
+            Log.w("RadioButton", "llegue aqui2");
+
+            obj_params obj = (obj_params) iterator.next();
+
+            RadioButton rb = new RadioButton(this);
+
+            rb.setId(obj.getId());
+            rb.setText(obj.getDescription());
+
+            rg.addView(rb);
+
+            Log.w("RadioButton", "editText" + " " + obj.getId() + " " + obj.getDescription());
+
+        }
+
+        llContenedor.addView(rg);
+        radioGroups.add(rg);
+
+    }
+
+    // crear ToggleButton
+    public void createToggleButton(int idField){
+
+        ToggleButton tb = new ToggleButton(this);
+        tb.setId(idField);
+        tb.setChecked(true);
+
+        llContenedor.addView(tb);
+        toggleButtons.add(tb);
+
+    }
+
+    // crear Switch
+    public void createSwitch(int idField){
+
+
+        Switch s = new Switch(this);
+        s.setId(idField);
+        s.setTextOn("Si");
+        s.setTextOff("No");
+        s.setChecked(true);
+
+        Log.w("Switch", "su id es  " + s.getId());
+
+        llContenedor.addView(s);
+        switches.add(s);
+
 
     }
 
