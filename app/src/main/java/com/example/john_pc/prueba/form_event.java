@@ -123,8 +123,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
-
-
                 JSONArray respuesta = new JSONArray();
 
                 for (Iterator iterator = editTexts.iterator(); iterator
@@ -178,6 +176,38 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         parametros.put("valueFile", "");
                         respuesta.put(parametros);
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                for (Iterator iterator = imageViews.iterator(); iterator
+                        .hasNext();) {
+
+                    ImageView imageView = (ImageView) iterator.next();
+
+
+                    imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();
+
+                    
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    
+
+                    Log.w("Imagen", "imageView" + " " + imageView.getId() + " " + encoded);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", imageView.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encoded);
+                        respuesta.put(parametros);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
