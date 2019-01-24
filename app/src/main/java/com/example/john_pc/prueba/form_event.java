@@ -8,11 +8,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -55,6 +53,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -99,6 +98,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     Base64 imgBase64;
     JSONObject jsonenvio = new JSONObject();
 
+    Handler hand = new Handler();
+    String fecha_2;
+    String fecha_1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -112,6 +115,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         idForm = parametros.getString("idForm");
+
+
+        hand.removeCallbacks(actualizar);
+        hand.postDelayed(actualizar, 100);
 
         validarPermisos();
 
@@ -218,7 +225,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 try {
                     jsonenvio.put("idEvent", "0");
                     jsonenvio.put("idEventDependency", "0");
-                    jsonenvio.put("dateEvent", "2019-01-08 12:30:15");
+                    jsonenvio.put("dateEvent", fecha_2);
                     jsonenvio.put("posGeo", "123456789");
                     jsonenvio.put("idForm", idForm);
                     jsonenvio.put("P", respuesta);
@@ -826,5 +833,24 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         builder.show();
 
     }
+
+    // actualiza la fecha
+
+    private Runnable actualizar = new Runnable() {
+
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+
+            SimpleDateFormat fmt1 = new SimpleDateFormat("yyyyMMddHHmmss");
+            SimpleDateFormat fmt2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date();
+            fecha_1 = fmt1.format(date);
+            fecha_2 = fmt2.format(date);
+            hand.postDelayed(this, 1000);
+
+        }
+
+    };
 
 }
