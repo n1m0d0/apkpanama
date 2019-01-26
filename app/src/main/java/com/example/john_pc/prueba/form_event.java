@@ -51,7 +51,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -94,6 +93,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
     ArrayList<ToggleButton> toggleButtons = new ArrayList<ToggleButton>();
     ArrayList<Switch> switches = new ArrayList<Switch>();
+    ArrayList<EditText> editTextsDate = new ArrayList<EditText>();
     ArrayList<String> archivos = new ArrayList<String>();
     Bitmap bit;
     Uri output;
@@ -352,6 +352,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 4:
 
+                                createEditTextDate(idField);
 
                                 break;
 
@@ -366,19 +367,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 7:
 
-                        /*Button btn2 = null;
-                        btn2.setId(idField);
-                        btn2 =  new Button(this);
-                        btn2.setText("Elegir Archivo");
-                        llContenedor.addView(btn2);
-                        btn2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
 
-
-
-                            }
-                        });*/
 
                                 break;
 
@@ -497,50 +486,17 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    // crear edittext datetami en el contenedor
+    // crear edittext datetime en el contenedor
 
-    public void crearedittextdate(int id_opcion, String opcion, int descripcion) {
+    public void createEditTextDate(int id) {
 
+        EditText editText = new EditText(this);
+        editText.setId(id);
+        editText.setEnabled(true);
+        editText.setOnClickListener(form_event.this);
 
-        final EditText et = new EditText(this);
-        et.setInputType(InputType.TYPE_CLASS_TEXT);
-        et.setId(id_opcion);
-        InputFilter[] ifet = new InputFilter[1];
-        ifet[0] = new InputFilter.LengthFilter(descripcion);
-        et.setFilters(ifet);
-        llContenedor.addView(et);
-        editTexts.add(et);
-
-        final Calendar myCalendar = Calendar.getInstance();
-
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                // TODO Auto-generated method stub
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "MM/dd/yy"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-                et.setText(sdf.format(myCalendar.getTime()));
-            }
-
-        };
-
-        et.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                new DatePickerDialog(form_event.this, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
+        editTextsDate.add(editText);
+        llContenedor.addView(editText);
 
     }
 
@@ -721,6 +677,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         opcion = v.getId();
 
         boolean usarCamara = false;
+        boolean date = false;
 
         for(Iterator iterator = imageViews.iterator(); iterator
                 .hasNext();) {
@@ -738,7 +695,26 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         }
 
-        if(usarCamara == true) {
+        for (Iterator iterator = editTextsDate.iterator(); iterator
+                .hasNext();) {
+
+            EditText editText = (EditText) iterator.next();
+
+            if(editText.getId() == opcion) {
+
+                date = true;
+
+            }
+
+        }
+
+        if (date){
+
+            getDate();
+
+        }
+
+        if(usarCamara) {
 
             tomarFotografia();
 
@@ -933,4 +909,30 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     };
 
+    //alert dialog para obtener fecha
+    public void getDate(){
+
+        int mYear, mMonth, mDay;
+        Calendar mcurrentDate = Calendar.getInstance();
+        mYear = mcurrentDate.get(Calendar.YEAR);
+        mMonth = mcurrentDate.get(Calendar.MONTH);
+        mDay  =mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog mdatePickerDialog = new DatePickerDialog(form_event.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                EditText editText = new EditText(form_event.this);
+                editText = findViewById(opcion);
+                int aux = month + 1;
+                String fecha= "" + year + "-" + aux + "-" + dayOfMonth;
+                Log.w("fecha", fecha);
+                editText.setText(fecha);
+
+            }
+        },mYear,mMonth,mDay);
+        mdatePickerDialog.setTitle("Selecione la fecha");
+        mdatePickerDialog.show();
+
+    }
 }
