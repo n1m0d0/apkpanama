@@ -164,6 +164,35 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 }
 
+                for (Iterator iterator = editTextsDate.iterator(); iterator
+                        .hasNext();) {
+
+                    EditText editText = (EditText) iterator.next();
+                    String obs_respuesta = editText.getText().toString().trim();
+
+                    if (!obs_respuesta.equals("")) {
+
+                        msj = Toast.makeText(form_event.this, obs_respuesta
+                                + " " + editText.getId(), Toast.LENGTH_LONG);
+                        msj.show();
+
+                    }
+
+                    Log.w("Edit", "editText" + " " + editText.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", editText.getId());
+                        parametros.put("valueInputField", obs_respuesta);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
                 for (Iterator iterator = spinners.iterator(); iterator
                         .hasNext();) {
 
@@ -327,24 +356,26 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                         }
 
-                        creartextview(description);
+
                         switch (type) {
 
                             case 1:
 
-                                crearedittext(idField, " ", 20);
+                                creartextview(description);
+                                crearedittext(idField, " ", 100);
 
                                 break;
 
                             case 2:
 
+                                creartextview(description);
                                 crearedittextmultilinea(idField, " ", 254);
 
                                 break;
 
                             case 3:
 
-                                //createSpinner(idField, listopcion);
+                                creartextview(description);
                                 createSpinner(idField, itemp);
 
 
@@ -352,35 +383,40 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 4:
 
+                                creartextview(description);
                                 createEditTextDate(idField);
 
                                 break;
 
                             case 5:
+
+                                creartextview(description);
+
                                 break;
 
                             case 6:
 
+                                creartextview(description);
                                 createImageView(idField);
 
                                 break;
 
                             case 7:
 
-
+                                creartextview(description);
 
                                 break;
 
                             case 8:
 
-                                //createSpinner(idField, listopcion);
+                                creartextview(description);
                                 createSpinner(idField, itemp);
 
                                 break;
 
                             case 9:
 
-                                createSwitch(idField);
+                                createSwitch(idField, description);
 
                                 break;
 
@@ -547,11 +583,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     }
 
     // crear Switch
-    public void createSwitch(int idField){
+    public void createSwitch(int idField, String description){
 
 
         Switch s = new Switch(this);
         s.setId(idField);
+        s.setText(description);
         s.setTextOn("Si");
         s.setTextOff("No");
         s.setChecked(true);
