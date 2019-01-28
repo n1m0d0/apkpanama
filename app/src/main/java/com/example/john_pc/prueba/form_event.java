@@ -45,19 +45,21 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
 import static android.Manifest.permission.CAMERA;
@@ -75,6 +77,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
+
+    final int codigoCamera = 20;
+    final int codigoFile = 10;
 
     private final String camara_raiz = "misImagenesSistema/";
     private final String ruta_imagen = camara_raiz + "misFotos";
@@ -94,7 +99,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<ToggleButton> toggleButtons = new ArrayList<ToggleButton>();
     ArrayList<Switch> switches = new ArrayList<Switch>();
     ArrayList<EditText> editTextsDate = new ArrayList<EditText>();
-    ArrayList<String> archivos = new ArrayList<String>();
+    ArrayList<TextView> textViewsFiles = new ArrayList<TextView>();
     Bitmap bit;
     Uri output;
     Bitmap bmp;
@@ -404,6 +409,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 7:
 
                                 creartextview(description);
+                                createTextviewFile(idField);
 
                                 break;
 
@@ -648,6 +654,18 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
+    public void createTextviewFile(int idField) {
+
+        TextView textView = new TextView(this);
+        textView.setId(idField);
+        textView.setText("haga clic para escoger un archivo");
+        textView.setOnClickListener(this);
+
+        llContenedor.addView(textView);
+        textViewsFiles.add(textView);
+
+    }
+
     //direccion del path
     private String getPath(Uri uri) {
         String[] projection = { android.provider.MediaStore.Images.Media.DATA };
@@ -715,6 +733,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         boolean usarCamara = false;
         boolean date = false;
+        boolean uploadFile = false;
 
         for(Iterator iterator = imageViews.iterator(); iterator
                 .hasNext();) {
@@ -745,6 +764,19 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         }
 
+        for (Iterator iterator = textViewsFiles.iterator(); iterator
+                .hasNext();) {
+
+            TextView textView = (TextView) iterator.next();
+
+            if(textView.getId() == opcion) {
+
+                uploadFile = true;
+
+            }
+
+        }
+
         if (date){
 
             getDate();
@@ -757,12 +789,28 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         }
 
+        if(uploadFile) {
+
+            recoverDataFile();
+
+        }
+
 
 
     }
 
-    // camara
+    //recuperar archivo
+    public void recoverDataFile() {
 
+        new MaterialFilePicker()
+                .withActivity(form_event.this)
+                .withRequestCode(codigoFile)
+                .start();
+
+    }
+
+
+    // camara
     private void tomarFotografia() {
 
         /*File fileImagen = new File(Environment.getExternalStorageDirectory(), ruta_imagen);
@@ -787,7 +835,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagen));
-        startActivityForResult(intent, 20);
+        startActivityForResult(intent, codigoCamera);
 
 
     }
@@ -797,6 +845,39 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         super.onActivityResult(requestCode,resultCode,data);
         if (resultCode== RESULT_OK){
 
+
+            switch (requestCode) {
+
+                case codigoCamera:
+
+                    Bundle ext = data.getExtras();
+                    bmp = (Bitmap) ext.get("data");
+
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                    ImageView iv = findViewById(opcion);
+                    iv.setImageBitmap(bmp);
+
+                    break;
+
+                case codigoFile:
+
+                    String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+
+                    TextView textView = findViewById(opcion);
+                    textView.setText(filePath);
+
+                    File file = new File(data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH));
+
+                    Log.w("path", filePath);
+
+                    break;
+
+            }
 
             /*MediaScannerConnection.scanFile(this, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener() {
                 @Override
@@ -812,17 +893,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             iv.setImageBitmap(bitmap);*/
 
 
-            Bundle ext = data.getExtras();
-            bmp = (Bitmap) ext.get("data");
 
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream .toByteArray();
-
-            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-            ImageView iv = findViewById(opcion);
-            iv.setImageBitmap(bmp);
 
         }
     }
