@@ -54,6 +54,8 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -280,7 +282,56 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 }
 
-                Log.w("json", "" + respuesta);
+                for (Iterator iterator = textViewsFiles.iterator(); iterator
+                        .hasNext();) {
+
+                    TextView textView = (TextView) iterator.next();
+
+
+                    /*imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();
+
+
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);*/
+
+                    File file = new File(textView.getText().toString().trim());
+
+                    String[] parts = textView.getText().toString().trim().split("/");
+                    String nombre = parts[parts.length - 1];
+
+                    byte[] fileArray = new byte[(int) file.length()];
+                    InputStream inputStream;
+
+                    String encodedFile = "";
+                    try {
+                        inputStream = new FileInputStream(file);
+                        inputStream.read(fileArray);
+                        encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
+                    } catch (Exception e) {
+                        // Manejar Error
+                    }
+
+
+                    Log.w("File", "files" + " " + textView.getId() + "nombre" + nombre);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", nombre);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encodedFile);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                //Log.w("json", "" + respuesta);
                 try {
                     jsonenvio.put("idEvent", "0");
                     jsonenvio.put("idEventDependency", "0");
@@ -289,7 +340,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     jsonenvio.put("idForm", idForm);
                     jsonenvio.put("P", respuesta);
 
-                    Log.w("json", "" + jsonenvio);
+                    //Log.w("json", "" + jsonenvio);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -666,15 +717,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    //direccion del path
-    private String getPath(Uri uri) {
-        String[] projection = { android.provider.MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(android.provider.MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
     private void enviarformulario(){
 
         Log.w("url", url2);
@@ -870,8 +912,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     TextView textView = findViewById(opcion);
                     textView.setText(filePath);
-
-                    File file = new File(data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH));
 
                     Log.w("path", filePath);
 
