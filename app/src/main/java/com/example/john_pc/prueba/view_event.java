@@ -1,18 +1,58 @@
 package com.example.john_pc.prueba;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TextView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class view_event extends AppCompatActivity implements View.OnClickListener {
 
-    EditText etDataTime, etLongitude, etLatitude, etLocationEvent, etEvent, etLicensePlate, etClient,
-            etBoat, etTypeVehicle, etReasonVisit, etDestination, etCustomsVisit, etLicensePlate2, etPassenger,
-            etCarrierCompany;
+    LinearLayout llContenedor;
     Button btnCheckOut;
+    String auth;
+    String userName;
+    String idEvent;
+    String url = "https://test.portcolon2000.site/api/openEvent/";
+    ProgressDialog mProgressDialog;
+    RequestQueue mRequestQueue;
+    JsonArrayRequest mJsonArrayRequest;
+    ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
+    ArrayList<TextView> textViews = new ArrayList<TextView>();
+    int option;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,59 +60,300 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-        etDataTime = findViewById(R.id.etDateTime);
-        etLongitude = findViewById(R.id.etLongitude);
-        etLatitude = findViewById(R.id.etLatitude);
-        etLocationEvent = findViewById(R.id.etLocationEvent);
-        etEvent = findViewById(R.id.etEvent);
-        etLicensePlate = findViewById(R.id.etLicensePlate);
-        etClient = findViewById(R.id.etClient);
-        etBoat = findViewById(R.id.etBoat);
-        etTypeVehicle = findViewById(R.id.etTypeVehicle);
-        etReasonVisit = findViewById(R.id.etReasonVisit);
-        etDestination = findViewById(R.id.etDestination);
-        etCustomsVisit = findViewById(R.id.etCustomsVisit);
-        etLicensePlate2 = findViewById(R.id.etLicensePlate2);
-        etPassenger = findViewById(R.id.etPassenger);
-        etCarrierCompany = findViewById(R.id.etCarrierCompany);
+        llContenedor = findViewById(R.id.llContenedor);
 
-        btnCheckOut = findViewById(R.id.btnCheckOut);
-        btnCheckOut.setOnClickListener(this);
+        Bundle parametros = this.getIntent().getExtras();
+        auth = parametros.getString("auth");
+        userName = parametros.getString("userName");
+        idEvent = parametros.getString("idEvent");
 
+        Log.w("idEvent", idEvent);
+        url = url + idEvent;
         //funcion para obtener datos
 
         //mostrar datos
-        etDataTime.setText("1");
-        etLongitude.setText("2");
-        etLatitude.setText("2");
-        etLocationEvent.setText("2");
-        etEvent.setText("2");
-        etLicensePlate.setText("2");
-        etClient.setText("2");
-        etBoat.setText("2");
-        etTypeVehicle.setText("2");
-        etReasonVisit.setText("2");
-        etDestination.setText("2");
-        etCustomsVisit.setText("2");
-        etLicensePlate2.setText("2");
-        etPassenger.setText("2");
-        etCarrierCompany.setText("2");
+
+        cargarFormulario();
+
+        btnCheckOut = findViewById(R.id.btnCheckOut);
+        btnCheckOut.setVisibility(View.GONE);
 
     }
 
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()) {
+        option = v.getId();
 
-            case R.id.btnCheckOut:
+        String urls = "";
 
-                Intent ir = new Intent(this, checkout.class);
-                startActivity(ir);
+        for (Iterator iterator = imageViews.iterator(); iterator
+                .hasNext();) {
 
-                break;
+            ImageView imageView = (ImageView) iterator.next();
+
+            if (imageView.getId() == option) {
+
+                
+                urls = "" + imageView.getContentDescription();
+                Uri uri = Uri.parse(urls);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
+
+            }
+
+            Log.w("Edit", imageView.getId() + " = " + urls);
+
 
         }
 
+        for (Iterator iterator = textViews.iterator(); iterator
+                .hasNext();) {
+
+            TextView textView = (TextView) iterator.next();
+
+            if (textView.getId() == option) {
+
+                Uri uri = Uri.parse(textView.getText().toString().trim());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
+
+            }
+
+            Log.w("Edit", textView.getId() + " = " + urls);
+
+
+        }
+
+
     }
+
+    private void cargarFormulario(){
+
+        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.show();
+
+        mRequestQueue = Volley.newRequestQueue(this);
+
+        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+                mProgressDialog.hide();
+
+                try {
+
+                    for (int i = 0; i < response.length(); i++) {
+
+                        JSONObject form = response.getJSONObject(i);
+
+                        int idEvent = form.getInt("idEvent");
+                        int idEventDependency = form.getInt("idEventDependency");
+                        String dateEvent = form.getString("dateEvent");
+                        String posGeo = form.getString("posGeo");
+                        int idForm = form.getInt("idForm");
+                        JSONArray opciones = form.getJSONArray("P");
+
+                        //ArrayList<obj_params> itemp = new ArrayList<obj_params>();
+
+                        for (int j = 0; j < opciones.length(); j++) {
+
+                            JSONObject op = opciones.getJSONObject(j);
+                            int idField = op.getInt("idField");
+                            String valueInputField = op.getString("valueInputField");
+                            String valueInputDateField = op.getString("valueInputDateField");
+                            String valueListField = op.getString("valueListField");
+                            String valueFile = op.getString("valueFile");
+                            int type = op.getInt("type");
+                            String description = op.getString("description");
+
+                            switch (type){
+
+                                case 1:
+
+                                    createTextView(description);
+                                    createEditText(valueInputField);
+
+                                    break;
+
+                                case 2:
+
+                                    createTextView(description);
+                                    createEditTextMultiLinea(valueInputField);
+
+                                    break;
+
+                                case 3:
+
+                                    createTextView(description);
+                                    createEditText(valueInputField);
+
+                                    break;
+
+                                case 4:
+
+                                    createTextView(description);
+                                    createEditText(valueInputDateField);
+
+                                    break;
+
+                                case 5:
+
+                                    createTextView(description);
+                                    createEditText(valueInputDateField);
+
+                                    break;
+
+                                case 6:
+
+                                    createTextView(description);
+                                    createImageView(idField, valueFile, valueInputField);
+
+                                    break;
+
+                                case 7:
+
+                                    createTextViewpath(idField, valueInputField);
+
+                                    break;
+
+                                case 8:
+
+                                    createTextView(description);
+                                    createEditText(valueInputField);
+
+                                    break;
+
+                                case 9:
+
+                                    createSwitch(description, valueInputField);
+
+                                    break;
+
+                            }
+
+
+                            //itemp.add(new obj_params(idField, des));
+
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
+
+                }
+
+            }
+
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                mProgressDialog.hide();
+
+            }
+        }){
+
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+
+                HashMap headers = new HashMap();
+                headers.put("Authorization", auth); //authentication
+                return headers;
+
+            }
+
+        };
+
+        mRequestQueue.add(mJsonArrayRequest);
+
+    }
+
+    public void createTextView(String description) {
+
+        TextView textView = new TextView(this);
+        textView.setText(description);
+        llContenedor.addView(textView);
+
+
+    }
+
+    public void createEditText(String description) {
+
+        EditText editText = new EditText(this);
+        editText.setText(description);
+        editText.setEnabled(false);
+        llContenedor.addView(editText);
+
+    }
+
+    public void createEditTextMultiLinea(String descripcion) {
+
+        EditText et = new EditText(this);
+        et.setSingleLine(false);
+        et.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        et.setLines(5);
+        et.setMaxLines(10);
+        et.setVerticalScrollBarEnabled(true);
+        et.setMovementMethod(ScrollingMovementMethod.getInstance());
+        et.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+        et.setText(descripcion);
+        InputFilter[] ifet = new InputFilter[1];
+        ifet[0] = new InputFilter.LengthFilter(254);
+        et.setFilters(ifet);
+        et.setEnabled(false);
+        llContenedor.addView(et);
+
+    }
+
+    public void createSwitch(String description, String valor) {
+
+        boolean variable = Boolean.parseBoolean (valor);
+        Switch s = new Switch(this);
+        s.setText(description);
+        s.setTextOn("Si");
+        s.setTextOff("No");
+        s.setChecked(variable);
+        s.setEnabled(false);
+        llContenedor.addView(s);
+
+    }
+
+    public void createImageView(int id, String imagen, String url){
+
+        ImageView imageView = new ImageView(this);
+
+        imageView.setId(id);
+        imageView.setContentDescription(url);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] imageBytes = baos.toByteArray();
+        imageBytes = Base64.decode(imagen, Base64.DEFAULT);
+        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        imageView.setImageBitmap(decodedImage);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
+        imageView.setLayoutParams(lp);
+        imageView.setOnClickListener(this);
+        imageViews.add(imageView);
+        llContenedor.addView(imageView);
+
+    }
+    public void createTextViewpath(int id, String description) {
+
+        TextView textView = new TextView(this);
+        textView.setId(id);
+        textView.setText(description);
+        textView.setOnClickListener(this);
+        textViews.add(textView);
+        llContenedor.addView(textView);
+
+    }
+
 }
