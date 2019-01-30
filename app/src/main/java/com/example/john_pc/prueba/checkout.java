@@ -191,8 +191,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                     try {
                         JSONObject parametros = new JSONObject();
                         parametros.put("idField", editText.getId());
-                        parametros.put("valueInputField", obs_respuesta);
-                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", obs_respuesta);
                         parametros.put("valueListField", "");
                         parametros.put("valueFile", "");
                         respuesta.put(parametros);
@@ -384,8 +384,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                         int idparameter = form.getInt("IDPARAMETER");
                         int input_max = form.getInt("INPUT_MAX");
                         String input_regx = form.getString("INPUT_REGEX");
-                        int input_datemin = form.getInt("INPUT_DATEMIN");
-                        int input_datemax = form.getInt("INPUT_DATEMAX");
+                        //int input_datemin = form.getInt("INPUT_DATEMIN");
+                        //int input_datemax = form.getInt("INPUT_DATEMAX");
                         //String photo_resolution = form.getString("PHOTO_RESOLUTION");
                         int file_size = form.getInt("FILE_SIZE");
                         int reg_begin = form.getInt("REG_BEGIN");
