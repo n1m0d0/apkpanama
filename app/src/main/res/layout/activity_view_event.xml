@@ -28,7 +28,7 @@
 
             <Button
                 android:id="@+id/btnCheckOut"
-                android:text="@string/save"
+                android:text="@string/checkOut"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

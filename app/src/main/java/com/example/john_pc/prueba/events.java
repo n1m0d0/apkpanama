@@ -133,6 +133,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
         msj.show();*/
+        Log.w("respuesta", "" + response);
+
         mProgressDialog.hide();
 
         try{

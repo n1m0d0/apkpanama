@@ -53,6 +53,9 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
     int option;
+    Intent ir;
+    int generaForm;
+    int idForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +72,27 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
         Log.w("idEvent", idEvent);
         url = url + idEvent;
-        //funcion para obtener datos
-
         //mostrar datos
 
         cargarFormulario();
 
         btnCheckOut = findViewById(R.id.btnCheckOut);
+        btnCheckOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ir = new Intent(view_event.this, checkout.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                ir.putExtra("idForm", "" + generaForm);
+                ir.putExtra("idEvent", "" + idEvent);
+                startActivity(ir);
+
+                Log.w("generaForm", "" + "" + generaForm);
+
+            }
+        });
+
         btnCheckOut.setVisibility(View.GONE);
 
     }
@@ -154,8 +171,15 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                         int idEventDependency = form.getInt("idEventDependency");
                         String dateEvent = form.getString("dateEvent");
                         String posGeo = form.getString("posGeo");
-                        int idForm = form.getInt("idForm");
+                        idForm = form.getInt("idForm");
+                        generaForm = form.getInt("generaForm");
                         JSONArray opciones = form.getJSONArray("P");
+
+                        if(generaForm > 0) {
+
+                            btnCheckOut.setVisibility(View.VISIBLE);
+
+                        }
 
                         //ArrayList<obj_params> itemp = new ArrayList<obj_params>();
 
@@ -345,6 +369,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         llContenedor.addView(imageView);
 
     }
+
     public void createTextViewpath(int id, String description) {
 
         TextView textView = new TextView(this);

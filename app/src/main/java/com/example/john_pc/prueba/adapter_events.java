@@ -50,7 +50,7 @@ public class adapter_events extends BaseAdapter {
 
         obj_events item = items.get(position);
 
-        if(item.estado_evento == 0){
+        //if(item.estado_evento == 0){
 
             TextView id = vi.findViewById(R.id.tvIdEvent);
             id.setText(""+item.getId());
@@ -94,7 +94,7 @@ public class adapter_events extends BaseAdapter {
 
             }
 
-        }
+        //}
 
         return vi;
     }
