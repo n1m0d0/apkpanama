@@ -49,6 +49,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     int personNumber;
     int containerNumber;
     int eventState;
+    String colorForm;
+    String idIconForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,8 +153,10 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 personNumber = event.getInt("personNumber");
                 containerNumber = event.getInt("containerNumber");
                 eventState = event.getInt("eventState");
+                colorForm = event.getString("colorForm");
+                idIconForm = event.getString("idIconForm");
 
-                itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm, personNumber, containerNumber, eventState));
+                itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm, personNumber, containerNumber, eventState, colorForm, idIconForm));
 
             }
 

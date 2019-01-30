@@ -2,13 +2,19 @@ package com.example.john_pc.prueba;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class adapter_events extends BaseAdapter {
@@ -52,6 +58,9 @@ public class adapter_events extends BaseAdapter {
 
         //if(item.estado_evento == 0){
 
+        LinearLayout ll0001 = vi.findViewById(R.id.ll0001);
+        ll0001.setBackgroundColor(Color.parseColor(item.colorForm));
+
             TextView id = vi.findViewById(R.id.tvIdEvent);
             id.setText(""+item.getId());
 
@@ -63,6 +72,13 @@ public class adapter_events extends BaseAdapter {
 
             TextView endDate = vi.findViewById(R.id.tvDateEventEnd);
             endDate.setText(item.getFecha_fin());
+
+            ImageView ivImage = vi.findViewById(R.id.iv0001);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] imageBytes = baos.toByteArray();
+            imageBytes = Base64.decode(item.getIdIconForm(), Base64.DEFAULT);
+            Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            ivImage.setImageBitmap(decodedImage);
 
             if (item.id_from == 2){
 

@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +45,7 @@ public class adapter_forms extends BaseAdapter {
         return items.get(position).getId();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -63,7 +69,14 @@ public class adapter_forms extends BaseAdapter {
         byte[] imageBytes = baos.toByteArray();
         imageBytes = Base64.decode(item.getIdIconForm(), Base64.DEFAULT);
         Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        //ivImage.getResources().getColor(Integer.parseInt(item.colorForm));
+        //ivImage.setBackgroundColor(Color.parseColor(item.colorForm));
+
+        ShapeDrawable sd = new ShapeDrawable(new OvalShape());
+        sd.setIntrinsicHeight(100);
+        sd.setIntrinsicWidth(100);
+        sd.getPaint().setColor(Color.parseColor(item.colorForm));
+        ivImage.setBackground(sd);
+        ivImage.setPadding(50, 50, 50, 50);
         ivImage.setImageBitmap(decodedImage);
 
         return vi;

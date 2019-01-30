@@ -10,8 +10,10 @@ public class obj_events {
     protected int numero_persona;
     protected int numero_container;
     protected int estado_evento;
+    protected String colorForm;
+    protected String idIconForm;
 
-    public obj_events(int id, String variable, String fecha_inicio, String fecha_fin, int id_from, int numero_persona, int numero_container, int estado_evento) {
+    public obj_events(int id, String variable, String fecha_inicio, String fecha_fin, int id_from, int numero_persona, int numero_container, int estado_evento, String colorForm, String idIconForm) {
 
         this.id = id;
         this.variable = variable;
@@ -21,6 +23,8 @@ public class obj_events {
         this.numero_persona = numero_persona;
         this.numero_container = numero_container;
         this.estado_evento = estado_evento;
+        this.colorForm = colorForm;
+        this.idIconForm = idIconForm;
 
     }
 
@@ -120,4 +124,19 @@ public class obj_events {
 
     }
 
+    public String getColorForm() {
+        return colorForm;
+    }
+
+    public void setColorForm(String colorForm) {
+        this.colorForm = colorForm;
+    }
+
+    public String getIdIconForm() {
+        return idIconForm;
+    }
+
+    public void setIdIconForm(String idIconForm) {
+        this.idIconForm = idIconForm;
+    }
 }
