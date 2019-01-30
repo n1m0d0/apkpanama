@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="test_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#2F3887</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

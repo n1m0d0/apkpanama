@@ -63,6 +63,7 @@ public class adapter_forms extends BaseAdapter {
         byte[] imageBytes = baos.toByteArray();
         imageBytes = Base64.decode(item.getIdIconForm(), Base64.DEFAULT);
         Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        //ivImage.getResources().getColor(Integer.parseInt(item.colorForm));
         ivImage.setImageBitmap(decodedImage);
 
         return vi;

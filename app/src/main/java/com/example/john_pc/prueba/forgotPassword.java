@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,7 +29,7 @@ import java.util.regex.Pattern;
 public class forgotPassword extends AppCompatActivity implements View.OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener {
 
     EditText etUser;
-    Button btnSend;
+    TextView btnSend;
     Toast msj;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;

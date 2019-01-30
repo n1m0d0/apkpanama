@@ -2,6 +2,7 @@ package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -24,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -36,9 +40,10 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity implements OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener {
 
     EditText etUser, etPassword;
-    Button btnLogin, btnForgotPassword;
+    TextView btnLogin, btnForgotPassword;
     Toast msj;
     Intent ir;
+    ImageView logo;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonObjectRequest mJsonObjectRequest;
@@ -54,13 +59,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         etUser = findViewById(R.id.etUser);
         etPassword = findViewById(R.id.etPassword);
-
+        logo = findViewById(R.id.img);
         btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(this);
         btnForgotPassword = findViewById(R.id.btnForgotPassword);
         btnForgotPassword.setOnClickListener(this);
 
     }
+
+
+
+    public void logo(View v) {
+
+                Uri uri = Uri.parse("https://www.portcolon2000.com/");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -105,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                 startActivity(ir);
 
                 break;
+
         }
 
     }

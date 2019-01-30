@@ -364,8 +364,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onResponse(JSONArray response) {
 
-        /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
-        msj.show();*/
+                Log.w("respuesta", "" + response);
+
                 mProgressDialog.hide();
 
                 try {
@@ -382,8 +382,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         int idparameter = form.getInt("IDPARAMETER");
                         int input_max = form.getInt("INPUT_MAX");
                         String input_regx = form.getString("INPUT_REGEX");
-                        int input_datemin = form.getInt("INPUT_DATEMIN");
-                        int input_datemax = form.getInt("INPUT_DATEMAX");
+                        //int input_datemin = form.getInt("INPUT_DATEMIN");
+                        //int input_datemax = form.getInt("INPUT_DATEMAX");
                         //String photo_resolution = form.getString("PHOTO_RESOLUTION");
                         int file_size = form.getInt("FILE_SIZE");
                         int reg_begin = form.getInt("REG_BEGIN");
@@ -488,6 +488,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 } catch (JSONException e) {
 
                     e.printStackTrace();
+                    Log.w("jsonException", "" + e);
             /*msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
             msj.show();*/
 
