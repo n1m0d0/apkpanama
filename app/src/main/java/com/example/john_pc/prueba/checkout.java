@@ -4,6 +4,7 @@ package com.example.john_pc.prueba;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -35,6 +36,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -102,7 +104,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
     ArrayList<ToggleButton> toggleButtons = new ArrayList<ToggleButton>();
     ArrayList<Switch> switches = new ArrayList<Switch>();
-    ArrayList<EditText> editTextsDate = new ArrayList<EditText>();
+    ArrayList<TextView> textViewsDate = new ArrayList<TextView>();
+    ArrayList<TextView> textViewsHour = new ArrayList<TextView>();
     ArrayList<TextView> textViewsFiles = new ArrayList<TextView>();
     Bitmap bit;
     Uri output;
@@ -128,6 +131,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         userName = parametros.getString("userName");
         idForm = parametros.getString("idForm");
         idEvent = parametros.getString("idEvent");
+
 
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
@@ -173,24 +177,53 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
                 }
 
-                for (Iterator iterator = editTextsDate.iterator(); iterator
+                for (Iterator iterator = textViewsDate.iterator(); iterator
                         .hasNext();) {
 
-                    EditText editText = (EditText) iterator.next();
-                    String obs_respuesta = editText.getText().toString().trim();
+                    TextView textView = (TextView) iterator.next();
+                    String obs_respuesta = textView.getText().toString().trim();
 
                     if (!obs_respuesta.equals("")) {
 
                         msj = Toast.makeText(checkout.this, obs_respuesta
-                                + " " + editText.getId(), Toast.LENGTH_LONG);
+                                + " " + textView.getId(), Toast.LENGTH_LONG);
                         msj.show();
 
                     }
 
-                    Log.w("Edit", "editText" + " " + editText.getId() + " " + obs_respuesta);
+                    Log.w("TextViewDate", "TextView" + " " + textView.getId() + " " + obs_respuesta);
                     try {
                         JSONObject parametros = new JSONObject();
-                        parametros.put("idField", editText.getId());
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", obs_respuesta);
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                for (Iterator iterator = textViewsHour.iterator(); iterator
+                        .hasNext();) {
+
+                    TextView textView = (TextView) iterator.next();
+                    String obs_respuesta = textView.getText().toString().trim();
+
+                    if (!obs_respuesta.equals("")) {
+
+                        msj = Toast.makeText(checkout.this, obs_respuesta
+                                + " " + textView.getId(), Toast.LENGTH_LONG);
+                        msj.show();
+
+                    }
+
+                    Log.w("TextViewHour", "TextView" + " " + textView.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
                         parametros.put("valueInputField", "");
                         parametros.put("valueInputDateField", obs_respuesta);
                         parametros.put("valueListField", "");
@@ -366,8 +399,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onResponse(JSONArray response) {
 
-        /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
-        msj.show();*/
+                Log.w("respuesta", "" + response);
+
                 mProgressDialog.hide();
 
                 try {
@@ -442,13 +475,14 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                             case 4:
 
                                 creartextview(description);
-                                createEditTextDate(idField);
+                                createTextViewDate(idField);
 
                                 break;
 
                             case 5:
 
                                 creartextview(description);
+                                createTextViewHour(idField);
 
                                 break;
 
@@ -490,6 +524,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                 } catch (JSONException e) {
 
                     e.printStackTrace();
+                    Log.w("jsonException", "" + e);
             /*msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
             msj.show();*/
 
@@ -581,17 +616,30 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    // crear edittext datetime en el contenedor
+    // crear TextViewDate en el contenedor
 
-    public void createEditTextDate(int id) {
+    public void createTextViewDate(int id) {
 
-        EditText editText = new EditText(this);
-        editText.setId(id);
-        editText.setEnabled(true);
-        editText.setOnClickListener(checkout.this);
+        TextView textView = new TextView(this);
+        textView.setId(id);
+        textView.setText("haga clic para obtener la fecha");
+        textView.setOnClickListener(checkout.this);
 
-        editTextsDate.add(editText);
-        llContenedor.addView(editText);
+        textViewsDate.add(textView);
+        llContenedor.addView(textView);
+
+    }
+
+    // crear TextViewHour en el contenedor
+    public void createTextViewHour(int id) {
+
+        TextView textView = new TextView(this);
+        textView.setId(id);
+        textView.setText("haga clic para obtener la Hora");
+        textView.setOnClickListener(checkout.this);
+
+        textViewsHour.add(textView);
+        llContenedor.addView(textView);
 
     }
 
@@ -795,14 +843,27 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         }
 
-        for (Iterator iterator = editTextsDate.iterator(); iterator
+        for (Iterator iterator = textViewsDate.iterator(); iterator
                 .hasNext();) {
 
-            EditText editText = (EditText) iterator.next();
+            TextView textView = (TextView) iterator.next();
 
-            if(editText.getId() == opcion) {
+            if(textView.getId() == opcion) {
 
                 date = true;
+
+            }
+
+        }
+
+        for (Iterator iterator = textViewsHour.iterator(); iterator
+                .hasNext();) {
+
+            TextView textView = (TextView) iterator.next();
+
+            if(textView.getId() == opcion) {
+
+                getHour();
 
             }
 
@@ -1072,17 +1133,42 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                EditText editText = new EditText(checkout.this);
-                editText = findViewById(opcion);
+                TextView textView = new TextView(checkout.this);
+                textView = findViewById(opcion);
                 int aux = month + 1;
-                String fecha= "" + year + "-" + aux + "-" + dayOfMonth;
+                String fecha = "" + year + "-" + aux + "-" + dayOfMonth;
                 Log.w("fecha", fecha);
-                editText.setText(fecha);
+                textView.setText(fecha);
 
             }
         },mYear,mMonth,mDay);
         mdatePickerDialog.setTitle("Selecione la fecha");
         mdatePickerDialog.show();
+
+    }
+
+    //alert dialog para obtener hora
+    public void getHour(){
+
+        int mHour, mMinute;
+        Calendar mcurrentDate = Calendar.getInstance();
+        mHour = mcurrentDate.get(Calendar.HOUR_OF_DAY);
+        mMinute = mcurrentDate.get(Calendar.MINUTE);
+
+        TimePickerDialog mTimePickerDialog = new TimePickerDialog(checkout.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                TextView textView = new TextView(checkout.this);
+                textView =  findViewById(opcion);
+                textView.setText(hourOfDay + ":" + minute);
+                Log.w("Hora", hourOfDay + ":" + minute);
+
+            }
+        }, mHour, mMinute, false);
+
+        mTimePickerDialog.setTitle("Selecione la Hora");
+        mTimePickerDialog.show();
 
     }
 }
