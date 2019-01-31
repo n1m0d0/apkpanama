@@ -159,7 +159,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onResponse(JSONArray response) {
 
-                mProgressDialog.hide();
+                mProgressDialog.dismiss();
 
                 try {
 
@@ -225,7 +225,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                                     break;
 
                                 case 5:
-
+                                    Log.w("hora",valueInputDateField);
                                     createTextView(description);
                                     createEditText(valueInputDateField);
 
@@ -279,7 +279,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                mProgressDialog.hide();
+                mProgressDialog.dismiss();
 
             }
         }){

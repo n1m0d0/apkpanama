@@ -114,7 +114,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
         /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
         msj.show();*/
-        mProgressDialog.hide();
+        mProgressDialog.dismiss();
 
         try{
 
@@ -151,7 +151,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     @Override
     public void onErrorResponse(VolleyError error) {
 
-        mProgressDialog.hide();
+        mProgressDialog.dismiss();
         msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();
 

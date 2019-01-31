@@ -137,7 +137,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         msj.show();*/
         Log.w("respuesta", "" + response);
 
-        mProgressDialog.hide();
+        mProgressDialog.dismiss();
 
         try{
 
@@ -174,7 +174,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     @Override
     public void onErrorResponse(VolleyError error) {
 
-        mProgressDialog.hide();
+        mProgressDialog.dismiss();
         msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();
         Log.w("respuesta", "" + error);

@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     @Override
     public void onErrorResponse(VolleyError error) {
 
-        mProgressDialog.hide();
+        mProgressDialog.dismiss();
         msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();
 
@@ -166,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     @Override
     public void onResponse(JSONObject response) {
+
+        mProgressDialog.dismiss();
 
         try {
             code = response.getInt("code");
@@ -177,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
             msj = Toast.makeText(this, "Bienvenido!!" + response, Toast.LENGTH_LONG);
             msj.show();
-            mProgressDialog.hide();
+
             ir = new Intent(this, events.class);
             ir.putExtra("auth", auth);
             ir.putExtra("userName", etUser.getText().toString().trim());
@@ -187,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
             msj = Toast.makeText(this, "Usuario o Clave incorrecto!!" + response, Toast.LENGTH_LONG);
             msj.show();
-            mProgressDialog.hide();
 
         }
 
