@@ -225,9 +225,8 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                                     break;
 
                                 case 5:
-                                    Log.w("hora",valueInputDateField);
                                     createTextView(description);
-                                    createEditText(valueInputDateField);
+                                    createEditText(valueInputField);
 
                                     break;
 

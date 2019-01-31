@@ -231,8 +231,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         try {
                             JSONObject parametros = new JSONObject();
                             parametros.put("idField", textView.getId());
-                            parametros.put("valueInputField", "");
-                            parametros.put("valueInputDateField", obs_respuesta);
+                            parametros.put("valueInputField", obs_respuesta);
+                            parametros.put("valueInputDateField", "");
                             parametros.put("valueListField", "");
                             parametros.put("valueFile", "");
                             respuesta.put(parametros);
