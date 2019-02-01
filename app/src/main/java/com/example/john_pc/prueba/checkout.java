@@ -137,7 +137,6 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         idForm = parametros.getString("idForm");
         idEvent = parametros.getString("idEvent");
 
-
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
 
@@ -151,7 +150,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onClick(View v) {
 
-
+                btnSave.setEnabled(false);
                 int validar = 0;
 
                 JSONArray respuesta = new JSONArray();
@@ -426,6 +425,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                 } else {
 
                     completarDatos();
+                    btnSave.setEnabled(true);
 
                 }
 
@@ -439,6 +439,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         mProgressDialog =  new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
         mRequestQueue = Volley.newRequestQueue(this);
@@ -815,6 +816,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         mProgressDialog =  new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
         mRequestQueue2 = Volley.newRequestQueue(this);
@@ -827,9 +829,10 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                 msj = Toast.makeText(checkout.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();
                 mProgressDialog.dismiss();
-
+                finish();
 
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

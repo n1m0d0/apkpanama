@@ -88,6 +88,8 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                 ir.putExtra("idEvent", "" + idEvent);
                 startActivity(ir);
 
+                finish();
+
                 Log.w("generaForm", "" + "" + generaForm);
 
             }
@@ -151,6 +153,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
         mProgressDialog =  new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
         mRequestQueue = Volley.newRequestQueue(this);
