@@ -114,7 +114,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String textDate = "Haga clic para obtener la Fecha";
     String textHour = "Haga clic para obtener la Hora";
     String textFile = "Haga clic para obtener el Archivo";
-    String textImage = "Imagen por defecto";
+    String textImage = "Imagen";
+    String obligatorio = "obligatorio";
 
     Handler hand = new Handler();
     String fecha_2;
@@ -149,7 +150,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             public void onClick(View v) {
 
 
-                boolean validar = false;
+                int validar = 0;
 
                 JSONArray respuesta = new JSONArray();
 
@@ -158,27 +159,30 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     EditText editText = (EditText) iterator.next();
                     String obs_respuesta = editText.getText().toString().trim();
+                    String control =  editText.getHint().toString().trim();
 
-                    if (obs_respuesta.equals("")) {
+                    Log.w("controlEditText", control);
 
-                        validar = false;
+                    if (obs_respuesta.equals("") && control.equals(obligatorio)) {
 
-                    } else {
+                        validar++;
+                        Log.w("sumaEditText", "" + validar);
 
-                        validar = true;
-                        Log.w("Edit", "editText" + " " + editText.getId() + " " + obs_respuesta);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", editText.getId());
-                            parametros.put("valueInputField", obs_respuesta);
-                            parametros.put("valueInputDateField", "");
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", "");
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    }
 
+                    Log.w("control", "" + validar);
+
+                    Log.w("Edit", "editText" + " " + editText.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", editText.getId());
+                        parametros.put("valueInputField", obs_respuesta);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
@@ -188,27 +192,28 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     TextView textView = (TextView) iterator.next();
                     String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
 
-                    if (obs_respuesta.equals(textDate)) {
+                    Log.w("controlTextViewDate", control);
 
-                        validar = false;
+                    if (obs_respuesta.equals(textDate) && control.equals(obligatorio)) {
 
-                    } else {
+                        validar++;
+                        Log.w("sumaTextViewDate", "" + validar);
 
-                        validar = true;
-                        Log.w("TextViewDate", "TextView" + " " + textView.getId() + " " + obs_respuesta);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", textView.getId());
-                            parametros.put("valueInputField", "");
-                            parametros.put("valueInputDateField", obs_respuesta);
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", "");
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    }
 
+                    Log.w("TextViewDate", "TextView" + " " + textView.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", obs_respuesta);
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
@@ -218,28 +223,28 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     TextView textView = (TextView) iterator.next();
                     String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
 
-                    if (obs_respuesta.equals(textHour)) {
+                    if (obs_respuesta.equals(textHour) && control.equals(obligatorio)) {
 
-                        validar = false;
+                        validar++;
+                        Log.w("sumaTextViewHour", "" + validar);
 
                     }
-                    else {
 
-                        validar = true;
-                        Log.w("TextViewHour", "TextView" + " " + textView.getId() + " " + obs_respuesta);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", textView.getId());
-                            parametros.put("valueInputField", obs_respuesta);
-                            parametros.put("valueInputDateField", "");
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", "");
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    Log.w("controlTextViewHour", control);
 
+                    Log.w("TextViewHour", "TextView" + " " + textView.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", obs_respuesta);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
@@ -298,37 +303,47 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     ImageView imageView = (ImageView) iterator.next();
 
-                    if (imageView.getContentDescription().equals(textImage))
+
+                    String[] parts = imageView.getContentDescription().toString().trim().split("-");
+                    String description = parts[0];
+                    String control = parts[parts.length - 1];
+
+                    if (description.equals(textImage) && control.equals(obligatorio))
                     {
 
-                        validar = false;
+                        validar++;
+                        Log.w("sumaImageView", "" + validar);
 
-                    } else {
+                    }
 
-                        validar = true;
+                    Log.w("controlImageView", control);
 
-                        imageView.buildDrawingCache();
-                        Bitmap bitmap = imageView.getDrawingCache();
+                    imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();
 
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                        byte[] byteArray = byteArrayOutputStream .toByteArray();
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
 
-                        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                        Log.w("Imagen", "imageView" + " " + imageView.getId() + " " + encoded);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", imageView.getId());
-                            parametros.put("valueInputField", "");
-                            parametros.put("valueInputDateField", "");
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", encoded);
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    if (description.equals(textImage)) {
 
+                        encoded ="";
+
+                    }
+
+                    Log.w("Imagen", "imageView" + " " + imageView.getId() + " " + encoded);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", imageView.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encoded);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
@@ -339,45 +354,51 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     TextView textView = (TextView) iterator.next();
 
                     String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
+
+                    Log.w("controlTextViewFiles", control);
+
+                    if (obs_respuesta.equals(textFile) && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaTextViewFiles", "" + validar);
+
+                    }
+
+                    File file = new File(textView.getText().toString().trim());
+
+                    String[] parts = textView.getText().toString().trim().split("/");
+                    String nombre = parts[parts.length - 1];
+
+                    byte[] fileArray = new byte[(int) file.length()];
+                    InputStream inputStream;
+
+                    String encodedFile = "";
+                    try {
+                        inputStream = new FileInputStream(file);
+                        inputStream.read(fileArray);
+                        encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
+                    } catch (Exception e) {
+                        // Manejar Error
+                    }
 
                     if (obs_respuesta.equals(textFile)) {
 
-                        validar = false;
+                        encodedFile = "";
 
-                    } else {
+                    }
 
-                        validar = true;
-
-                        File file = new File(textView.getText().toString().trim());
-
-                        String[] parts = textView.getText().toString().trim().split("/");
-                        String nombre = parts[parts.length - 1];
-
-                        byte[] fileArray = new byte[(int) file.length()];
-                        InputStream inputStream;
-
-                        String encodedFile = "";
-                        try {
-                            inputStream = new FileInputStream(file);
-                            inputStream.read(fileArray);
-                            encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
-                        } catch (Exception e) {
-                            // Manejar Error
-                        }
-
-                        Log.w("File", "files" + " " + textView.getId() + "nombre" + nombre);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", textView.getId());
-                            parametros.put("valueInputField", nombre);
-                            parametros.put("valueInputDateField", "");
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", encodedFile);
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
+                    Log.w("File", "files" + " " + textView.getId() + "nombre" + nombre);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", nombre);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encodedFile);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
@@ -396,7 +417,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     e.printStackTrace();
                 }
 
-                if (validar) {
+                if (validar == 0) {
 
                     enviarformulario();
 
@@ -448,7 +469,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         int file_size = form.getInt("FILE_SIZE");
                         int reg_begin = form.getInt("REG_BEGIN");
                         int reg_end = form.getInt("REG_END");
-                        int is_mandatory = form.getInt("IS_MANDATORY");
+                        String is_mandatory = form.getString("IS_MANDATORY");
                         int is_keybaule = form.getInt("IS_KEYVALUE");
 
 
@@ -478,14 +499,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 1:
 
                                 creartextview(description);
-                                crearedittext(idField, " ", input_max);
+                                crearedittext(idField, is_mandatory, input_max);
 
                                 break;
 
                             case 2:
 
                                 creartextview(description);
-                                crearedittextmultilinea(idField, " ", input_max);
+                                crearedittextmultilinea(idField, is_mandatory, input_max);
 
                                 break;
 
@@ -500,28 +521,28 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 4:
 
                                 creartextview(description);
-                                createTextViewDate(idField);
+                                createTextViewDate(idField, is_mandatory);
 
                                 break;
 
                             case 5:
 
                                 creartextview(description);
-                                createTextViewHour(idField);
+                                createTextViewHour(idField, is_mandatory);
 
                                 break;
 
                             case 6:
 
                                 creartextview(description);
-                                createImageView(idField);
+                                createImageView(idField, is_mandatory);
 
                                 break;
 
                             case 7:
 
                                 creartextview(description);
-                                createTextviewFile(idField);
+                                createTextviewFile(idField,is_mandatory);
 
                                 break;
 
@@ -600,9 +621,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
-        //et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-        //et.setPadding(2, 2, 2, 2);
-        //et.setHint(opcion);
+        et.setHint(opcion);
         et.setId(id_opcion);
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
@@ -625,9 +644,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         et.setVerticalScrollBarEnabled(true);
         et.setMovementMethod(ScrollingMovementMethod.getInstance());
         et.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
-        //et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-        //et.setPadding(2, 2, 2, 2);
-        //et.setHint(opcion);
+        et.setHint(opcion);
         et.setId(id_opcion);
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
@@ -639,11 +656,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // crear TextViewDate en el contenedor
 
-    public void createTextViewDate(int id) {
+    public void createTextViewDate(int id, String option) {
 
         TextView textView = new TextView(this);
         textView.setId(id);
         textView.setText(textDate);
+        textView.setHint(option);
         textView.setOnClickListener(form_event.this);
 
         textViewsDate.add(textView);
@@ -652,11 +670,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     }
 
     // crear TextViewHour en el contenedor
-    public void createTextViewHour(int id) {
+    public void createTextViewHour(int id, String option) {
 
         TextView textView = new TextView(this);
         textView.setId(id);
         textView.setText(textHour);
+        textView.setHint(option);
         textView.setOnClickListener(form_event.this);
 
         textViewsHour.add(textView);
@@ -756,12 +775,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // Crear imageview en el contenedor
 
-    public void createImageView(int idField){
+    public void createImageView(int idField, String option){
 
         ImageView iv = new ImageView(this);
         iv.setId(idField);
         iv.setImageResource(R.drawable.camera);
-        iv.setContentDescription(textImage);
+        iv.setContentDescription(textImage + "-" + option);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
         iv.setLayoutParams(lp);
         llContenedor.addView(iv);
@@ -771,11 +790,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    public void createTextviewFile(int idField) {
+    public void createTextviewFile(int idField, String option) {
 
         TextView textView = new TextView(this);
         textView.setId(idField);
         textView.setText(textFile);
+        textView.setHint(option);
         textView.setOnClickListener(this);
 
         llContenedor.addView(textView);
@@ -981,8 +1001,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
                     ImageView iv = findViewById(opcion);
+
+                    String[] parts = iv.getContentDescription().toString().trim().split("-");
+                    String description = parts[0] + "captura";
+                    String control = parts[parts.length - 1];
+
+                    iv.setContentDescription(description + "-" + control);
+
                     iv.setImageBitmap(bmp);
-                    iv.setContentDescription("Imagen capturada de la camara");
 
                     break;
 

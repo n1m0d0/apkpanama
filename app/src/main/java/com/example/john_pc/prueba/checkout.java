@@ -115,7 +115,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     String textDate = "Haga clic para obtener la Fecha";
     String textHour = "Haga clic para obtener la Hora";
     String textFile = "Haga clic para obtener el Archivo";
-    String textImage = "Imagen por defecto";
+    String textImage = "Imagen";
+    String obligatorio = "obligatorio";
 
     Handler hand = new Handler();
     String fecha_2;
@@ -136,6 +137,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         idForm = parametros.getString("idForm");
         idEvent = parametros.getString("idEvent");
 
+
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
 
@@ -150,102 +152,107 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             public void onClick(View v) {
 
 
-                boolean validar = false;
+                int validar = 0;
 
                 JSONArray respuesta = new JSONArray();
 
                 for (Iterator iterator = editTexts.iterator(); iterator
-                        .hasNext(); ) {
+                        .hasNext();) {
 
                     EditText editText = (EditText) iterator.next();
                     String obs_respuesta = editText.getText().toString().trim();
+                    String control =  editText.getHint().toString().trim();
 
-                    if (obs_respuesta.equals("")) {
+                    Log.w("controlEditText", control);
 
-                        validar = false;
+                    if (obs_respuesta.equals("") && control.equals(obligatorio)) {
 
-                    } else {
+                        validar++;
+                        Log.w("sumaEditText", "" + validar);
 
-                        validar = true;
-                        Log.w("Edit", "editText" + " " + editText.getId() + " " + obs_respuesta);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", editText.getId());
-                            parametros.put("valueInputField", obs_respuesta);
-                            parametros.put("valueInputDateField", "");
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", "");
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    }
 
+                    Log.w("control", "" + validar);
+
+                    Log.w("Edit", "editText" + " " + editText.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", editText.getId());
+                        parametros.put("valueInputField", obs_respuesta);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
 
                 for (Iterator iterator = textViewsDate.iterator(); iterator
-                        .hasNext(); ) {
+                        .hasNext();) {
 
                     TextView textView = (TextView) iterator.next();
                     String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
 
-                    if (obs_respuesta.equals(textDate)) {
+                    Log.w("controlTextViewDate", control);
 
-                        validar = false;
+                    if (obs_respuesta.equals(textDate) && control.equals(obligatorio)) {
 
-                    } else {
+                        validar++;
+                        Log.w("sumaTextViewDate", "" + validar);
 
-                        validar = true;
-                        Log.w("TextViewDate", "TextView" + " " + textView.getId() + " " + obs_respuesta);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", textView.getId());
-                            parametros.put("valueInputField", "");
-                            parametros.put("valueInputDateField", obs_respuesta);
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", "");
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    }
 
+                    Log.w("TextViewDate", "TextView" + " " + textView.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", obs_respuesta);
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
 
                 for (Iterator iterator = textViewsHour.iterator(); iterator
-                        .hasNext(); ) {
+                        .hasNext();) {
 
                     TextView textView = (TextView) iterator.next();
                     String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
 
-                    if (obs_respuesta.equals(textHour)) {
+                    if (obs_respuesta.equals(textHour) && control.equals(obligatorio)) {
 
-                        validar = false;
+                        validar++;
+                        Log.w("sumaTextViewHour", "" + validar);
 
-                    } else {
+                    }
 
-                        validar = true;
-                        Log.w("TextViewHour", "TextView" + " " + textView.getId() + " " + obs_respuesta);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", textView.getId());
-                            parametros.put("valueInputField", obs_respuesta);
-                            parametros.put("valueInputDateField", "");
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", "");
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    Log.w("controlTextViewHour", control);
 
+                    Log.w("TextViewHour", "TextView" + " " + textView.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", obs_respuesta);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
 
                 for (Iterator iterator = spinners.iterator(); iterator
-                        .hasNext(); ) {
+                        .hasNext();) {
 
                     Spinner spinner = (Spinner) iterator.next();
 
@@ -273,7 +280,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                 }
 
                 for (Iterator iterator = switches.iterator(); iterator
-                        .hasNext(); ) {
+                        .hasNext();) {
 
                     Switch s = (Switch) iterator.next();
 
@@ -294,89 +301,106 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
 
                 for (Iterator iterator = imageViews.iterator(); iterator
-                        .hasNext(); ) {
+                        .hasNext();) {
 
                     ImageView imageView = (ImageView) iterator.next();
 
-                    if (imageView.getContentDescription().equals(textImage)) {
 
-                        validar = false;
+                    String[] parts = imageView.getContentDescription().toString().trim().split("-");
+                    String description = parts[0];
+                    String control = parts[parts.length - 1];
 
-                    } else {
+                    if (description.equals(textImage) && control.equals(obligatorio))
+                    {
 
-                        validar = true;
+                        validar++;
+                        Log.w("sumaImageView", "" + validar);
 
-                        imageView.buildDrawingCache();
-                        Bitmap bitmap = imageView.getDrawingCache();
+                    }
 
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                        byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    Log.w("controlImageView", control);
 
-                        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();
 
-                        Log.w("Imagen", "imageView" + " " + imageView.getId() + " " + encoded);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", imageView.getId());
-                            parametros.put("valueInputField", "");
-                            parametros.put("valueInputDateField", "");
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", encoded);
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
 
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                    if (description.equals(textImage)) {
+
+                        encoded ="";
+
+                    }
+
+                    Log.w("Imagen", "imageView" + " " + imageView.getId() + " " + encoded);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", imageView.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encoded);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
 
                 for (Iterator iterator = textViewsFiles.iterator(); iterator
-                        .hasNext(); ) {
+                        .hasNext();) {
 
                     TextView textView = (TextView) iterator.next();
 
                     String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
+
+                    Log.w("controlTextViewFiles", control);
+
+                    if (obs_respuesta.equals(textFile) && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaTextViewFiles", "" + validar);
+
+                    }
+
+                    File file = new File(textView.getText().toString().trim());
+
+                    String[] parts = textView.getText().toString().trim().split("/");
+                    String nombre = parts[parts.length - 1];
+
+                    byte[] fileArray = new byte[(int) file.length()];
+                    InputStream inputStream;
+
+                    String encodedFile = "";
+                    try {
+                        inputStream = new FileInputStream(file);
+                        inputStream.read(fileArray);
+                        encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
+                    } catch (Exception e) {
+                        // Manejar Error
+                    }
 
                     if (obs_respuesta.equals(textFile)) {
 
-                        validar = false;
+                        encodedFile = "";
 
-                    } else {
+                    }
 
-                        validar = true;
-
-                        File file = new File(textView.getText().toString().trim());
-
-                        String[] parts = textView.getText().toString().trim().split("/");
-                        String nombre = parts[parts.length - 1];
-
-                        byte[] fileArray = new byte[(int) file.length()];
-                        InputStream inputStream;
-
-                        String encodedFile = "";
-                        try {
-                            inputStream = new FileInputStream(file);
-                            inputStream.read(fileArray);
-                            encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
-                        } catch (Exception e) {
-                            // Manejar Error
-                        }
-
-                        Log.w("File", "files" + " " + textView.getId() + "nombre" + nombre);
-                        try {
-                            JSONObject parametros = new JSONObject();
-                            parametros.put("idField", textView.getId());
-                            parametros.put("valueInputField", nombre);
-                            parametros.put("valueInputDateField", "");
-                            parametros.put("valueListField", "");
-                            parametros.put("valueFile", encodedFile);
-                            respuesta.put(parametros);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
+                    Log.w("File", "files" + " " + textView.getId() + "nombre" + nombre);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", nombre);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encodedFile);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 }
@@ -395,7 +419,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                     e.printStackTrace();
                 }
 
-                if (validar) {
+                if (validar == 0) {
 
                     enviarformulario();
 
@@ -411,9 +435,9 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    private void cargarFormulario() {
+    private void cargarFormulario(){
 
-        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog =  new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.show();
 
@@ -447,7 +471,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                         int file_size = form.getInt("FILE_SIZE");
                         int reg_begin = form.getInt("REG_BEGIN");
                         int reg_end = form.getInt("REG_END");
-                        int is_mandatory = form.getInt("IS_MANDATORY");
+                        String is_mandatory = form.getString("IS_MANDATORY");
                         int is_keybaule = form.getInt("IS_KEYVALUE");
 
 
@@ -477,14 +501,14 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                             case 1:
 
                                 creartextview(description);
-                                crearedittext(idField, " ", input_max);
+                                crearedittext(idField, is_mandatory, input_max);
 
                                 break;
 
                             case 2:
 
                                 creartextview(description);
-                                crearedittextmultilinea(idField, " ", input_max);
+                                crearedittextmultilinea(idField, is_mandatory, input_max);
 
                                 break;
 
@@ -499,28 +523,28 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                             case 4:
 
                                 creartextview(description);
-                                createTextViewDate(idField);
+                                createTextViewDate(idField, is_mandatory);
 
                                 break;
 
                             case 5:
 
                                 creartextview(description);
-                                createTextViewHour(idField);
+                                createTextViewHour(idField, is_mandatory);
 
                                 break;
 
                             case 6:
 
                                 creartextview(description);
-                                createImageView(idField);
+                                createImageView(idField, is_mandatory);
 
                                 break;
 
                             case 7:
 
                                 creartextview(description);
-                                createTextviewFile(idField);
+                                createTextviewFile(idField,is_mandatory);
 
                                 break;
 
@@ -549,8 +573,6 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
                     e.printStackTrace();
                     Log.w("jsonException", "" + e);
-            /*msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
-            msj.show();*/
 
                 }
 
@@ -562,11 +584,9 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             public void onErrorResponse(VolleyError error) {
 
                 mProgressDialog.dismiss();
-        /*msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
-        msj.show();*/
 
             }
-        }) {
+        }){
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -603,9 +623,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
-        //et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-        //et.setPadding(2, 2, 2, 2);
-        //et.setHint(opcion);
+        et.setHint(opcion);
         et.setId(id_opcion);
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
@@ -628,9 +646,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         et.setVerticalScrollBarEnabled(true);
         et.setMovementMethod(ScrollingMovementMethod.getInstance());
         et.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
-        //et.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-        //et.setPadding(2, 2, 2, 2);
-        //et.setHint(opcion);
+        et.setHint(opcion);
         et.setId(id_opcion);
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
@@ -642,11 +658,12 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     // crear TextViewDate en el contenedor
 
-    public void createTextViewDate(int id) {
+    public void createTextViewDate(int id, String option) {
 
         TextView textView = new TextView(this);
         textView.setId(id);
         textView.setText(textDate);
+        textView.setHint(option);
         textView.setOnClickListener(checkout.this);
 
         textViewsDate.add(textView);
@@ -655,11 +672,12 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     }
 
     // crear TextViewHour en el contenedor
-    public void createTextViewHour(int id) {
+    public void createTextViewHour(int id, String option) {
 
         TextView textView = new TextView(this);
         textView.setId(id);
         textView.setText(textHour);
+        textView.setHint(option);
         textView.setOnClickListener(checkout.this);
 
         textViewsHour.add(textView);
@@ -679,7 +697,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         Log.w("RadioButton", "" + items);
 
         for (Iterator iterator = items.iterator(); iterator
-                .hasNext(); ) {
+                .hasNext();) {
 
             Log.w("RadioButton", "llegue aqui2");
 
@@ -702,7 +720,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     }
 
     // crear ToggleButton
-    public void createToggleButton(int idField) {
+    public void createToggleButton(int idField){
 
         ToggleButton tb = new ToggleButton(this);
         tb.setId(idField);
@@ -714,7 +732,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     }
 
     // crear Switch
-    public void createSwitch(int idField, String description) {
+    public void createSwitch(int idField, String description){
 
 
         Switch s = new Switch(this);
@@ -747,7 +765,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     // crear un spinner en el contenedor
 
-    public void createSpinner(int idField, ArrayList<obj_params> aux) {
+    public void createSpinner(int idField, ArrayList<obj_params> aux){
 
         Spinner sp = new Spinner(this);
         sp.setId(idField);
@@ -759,13 +777,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     // Crear imageview en el contenedor
 
-    public void createImageView(int idField) {
+    public void createImageView(int idField, String option){
 
         ImageView iv = new ImageView(this);
         iv.setId(idField);
         iv.setImageResource(R.drawable.camera);
-        iv.setContentDescription(textImage);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400, 400);
+        iv.setContentDescription(textImage + "-" + option);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
         iv.setLayoutParams(lp);
         llContenedor.addView(iv);
         imageViews.add(iv);
@@ -774,11 +792,12 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    public void createTextviewFile(int idField) {
+    public void createTextviewFile(int idField, String option) {
 
         TextView textView = new TextView(this);
         textView.setId(idField);
         textView.setText(textFile);
+        textView.setHint(option);
         textView.setOnClickListener(this);
 
         llContenedor.addView(textView);
@@ -786,7 +805,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    private void enviarformulario() {
+    private void enviarformulario(){
 
         Log.w("url", url2);
 
@@ -794,7 +813,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         RequestQueue mRequestQueue2;
 
-        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog =  new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.show();
 
@@ -819,7 +838,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                 mProgressDialog.dismiss();
 
             }
-        }) {
+        }){
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -846,12 +865,12 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         boolean date = false;
         boolean uploadFile = false;
 
-        for (Iterator iterator = imageViews.iterator(); iterator
-                .hasNext(); ) {
+        for(Iterator iterator = imageViews.iterator(); iterator
+                .hasNext();) {
 
             ImageView imageView = (ImageView) iterator.next();
 
-            if (imageView.getId() == opcion) {
+            if(imageView.getId() == opcion) {
 
                 usarCamara = true;
 
@@ -863,11 +882,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         }
 
         for (Iterator iterator = textViewsDate.iterator(); iterator
-                .hasNext(); ) {
+                .hasNext();) {
 
             TextView textView = (TextView) iterator.next();
 
-            if (textView.getId() == opcion) {
+            if(textView.getId() == opcion) {
 
                 date = true;
 
@@ -876,11 +895,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         }
 
         for (Iterator iterator = textViewsHour.iterator(); iterator
-                .hasNext(); ) {
+                .hasNext();) {
 
             TextView textView = (TextView) iterator.next();
 
-            if (textView.getId() == opcion) {
+            if(textView.getId() == opcion) {
 
                 getHour();
 
@@ -889,11 +908,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         }
 
         for (Iterator iterator = textViewsFiles.iterator(); iterator
-                .hasNext(); ) {
+                .hasNext();) {
 
             TextView textView = (TextView) iterator.next();
 
-            if (textView.getId() == opcion) {
+            if(textView.getId() == opcion) {
 
                 uploadFile = true;
 
@@ -901,23 +920,24 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         }
 
-        if (date) {
+        if (date){
 
             getDate();
 
         }
 
-        if (usarCamara) {
+        if(usarCamara) {
 
             tomarFotografia();
 
         }
 
-        if (uploadFile) {
+        if(uploadFile) {
 
             recoverDataFile();
 
         }
+
 
 
     }
@@ -964,9 +984,9 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if (resultCode== RESULT_OK){
 
 
             switch (requestCode) {
@@ -978,13 +998,19 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
 
                     String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
                     ImageView iv = findViewById(opcion);
+
+                    String[] parts = iv.getContentDescription().toString().trim().split("-");
+                    String description = parts[0] + "captura";
+                    String control = parts[parts.length - 1];
+
+                    iv.setContentDescription(description + "-" + control);
+
                     iv.setImageBitmap(bmp);
-                    iv.setContentDescription("Imagen capturada de la camara");
 
                     break;
 
@@ -1015,27 +1041,30 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             iv.setImageBitmap(bitmap);*/
 
 
+
+
         }
     }
 
-    private boolean validarPermisos() {
+    private boolean validarPermisos(){
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-
-            return true;
-
-        }
-        if ((checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 
             return true;
 
         }
+        if((checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
 
-        if ((shouldShowRequestPermissionRationale(CAMERA)) || (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))) {
+            return true;
+
+        }
+
+        if ((shouldShowRequestPermissionRationale(CAMERA))||(shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))) {
 
             cargardialogo();
 
-        } else {
+        }
+        else {
 
             requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, CAMERA}, 100);
 
@@ -1045,7 +1074,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    private void cargardialogo() {
+    private void cargardialogo(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(checkout.this);
         builder.setTitle("Permisos Desactivados");
@@ -1069,9 +1098,10 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 100) {
+        if(requestCode == 100) {
 
-            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if(grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
 
 
             } else {
@@ -1084,7 +1114,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    private void cargardialogo2() {
+    private void cargardialogo2(){
 
         final CharSequence[] op = {"si", "no"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(checkout.this);
@@ -1093,15 +1123,16 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (op[which].equals("si")) {
+                if(op[which].equals("si")){
 
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     Uri uri = Uri.fromParts("package", getPackageName(), null);
-                    intent.setData(uri);
+                    intent .setData(uri);
                     startActivity(intent);
 
-                } else {
+                }
+                else {
 
                     msj = Toast.makeText(checkout.this, "los permisos no fueron aceptados", Toast.LENGTH_LONG);
                     msj.show();
@@ -1135,13 +1166,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     };
 
     //alert dialog para obtener fecha
-    public void getDate() {
+    public void getDate(){
 
         int mYear, mMonth, mDay;
         Calendar mcurrentDate = Calendar.getInstance();
         mYear = mcurrentDate.get(Calendar.YEAR);
         mMonth = mcurrentDate.get(Calendar.MONTH);
-        mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+        mDay  =mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog mdatePickerDialog = new DatePickerDialog(checkout.this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -1155,14 +1186,14 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                 textView.setText(fecha);
 
             }
-        }, mYear, mMonth, mDay);
+        },mYear,mMonth,mDay);
         mdatePickerDialog.setTitle("Selecione la fecha");
         mdatePickerDialog.show();
 
     }
 
     //alert dialog para obtener hora
-    public void getHour() {
+    public void getHour(){
 
         int mHour, mMinute;
         Calendar mcurrentDate = Calendar.getInstance();
@@ -1174,7 +1205,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
                 TextView textView = new TextView(checkout.this);
-                textView = findViewById(opcion);
+                textView =  findViewById(opcion);
                 textView.setText(hourOfDay + ":" + minute);
                 Log.w("Hora", hourOfDay + ":" + minute);
 
@@ -1186,7 +1217,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    public void completarDatos() {
+    public void completarDatos(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Importante");
