@@ -149,7 +149,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
-
+                btnSave.setEnabled(false);
                 int validar = 0;
 
                 JSONArray respuesta = new JSONArray();
@@ -424,6 +424,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 } else {
 
                     completarDatos();
+                    btnSave.setEnabled(true);
 
                 }
 
@@ -437,6 +438,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         mProgressDialog =  new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
         mRequestQueue = Volley.newRequestQueue(this);
@@ -813,6 +815,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         mProgressDialog =  new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
         mRequestQueue2 = Volley.newRequestQueue(this);
@@ -825,9 +828,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();
                 mProgressDialog.dismiss();
-
+                finish();
 
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
