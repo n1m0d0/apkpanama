@@ -2,6 +2,7 @@ package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -54,6 +55,14 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
         userName = parametros.getString("userName"); */
 
     }
+    public void logo(View v) {
+
+        Uri uri = Uri.parse("https://www.portcolon2000.com/");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+
+    }
+
 
     @Override
     public void onClick(View v) {

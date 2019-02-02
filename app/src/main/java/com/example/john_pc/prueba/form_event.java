@@ -828,6 +828,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();
                 mProgressDialog.dismiss();
+                ir = new Intent(form_event.this, events.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                startActivity(ir);
                 finish();
 
             }
@@ -1227,6 +1231,17 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         builder.setPositiveButton("Aceptar", null);
         builder.create();
         builder.show();
+
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        ir = new Intent(form_event.this, forms.class);
+        ir.putExtra("auth", auth);
+        ir.putExtra("userName", userName);
+        startActivity(ir);
+        finish();
 
     }
 

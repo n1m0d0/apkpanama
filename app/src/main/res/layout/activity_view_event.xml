@@ -27,10 +27,14 @@
             </LinearLayout>
 
             <Button
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 android:id="@+id/btnCheckOut"
                 android:text="@string/checkOut"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner"
+                />
 
 
         </LinearLayout>

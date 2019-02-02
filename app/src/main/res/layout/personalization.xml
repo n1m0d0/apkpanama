@@ -4,107 +4,59 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center"
-    android:weightSum="10"
+    android:background="@drawable/rounded_cornerlist"
     android:id="@+id/ll0001">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:orientation="vertical">
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
 
         <TextView
-            android:background="@color/colorHeader"
-            android:gravity="center"
-            android:text="123456"
-            android:textColor="@color/colorWhite"
             android:id="@+id/tvIdEvent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="123456"
+            android:textColor="@color/colorWhite" />
 
         <TextView
-            android:text="123456"
             android:id="@+id/tvKeyValue"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/bold"
+            android:text="123456" />
 
         <TextView
-            android:text="234567"
             android:id="@+id/tvDateEventBegin"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:text="234567" />
 
         <TextView
-            android:text="3456789"
+            android:textColor="@color/colorWhite"
             android:id="@+id/tvDateEventEnd"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:text="3456789" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:orientation="horizontal"
-            android:gravity="center">
+        android:layout_height="70dp"
+        android:layout_weight="8"
+        android:gravity="center"
+        android:orientation="vertical">
 
             <ImageView
-                android:gravity="center"
                 android:id="@+id/iv0001"
-                android:src="@drawable/password"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:weightSum="12"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/iv0003"
-                android:src="@drawable/password"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_weight="3"/>
-
-            <TextView
                 android:gravity="center"
-                android:text="10"
-                android:id="@+id/tv0003"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"/>
+                android:src="@drawable/password" />
 
-            <ImageView
-                android:id="@+id/iv0004"
-                android:src="@drawable/password"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="3"/>
-
-            <TextView
-                android:gravity="center"
-                android:text="10"
-                android:id="@+id/tv0004"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"/>
-
-        </LinearLayout>
-        
     </LinearLayout>
 
 </LinearLayout>

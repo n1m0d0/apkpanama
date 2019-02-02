@@ -4,15 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/separation"
-    android:layout_margin="@dimen/separation"
-    tools:context=".events">
-
+    android:padding="1dp"
+    tools:context=".events"
+    >
     <ListView
+        android:paddingTop="52dp"
         android:id="@+id/lvEvents"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:dividerHeight="10.0sp"
+        android:background="@color/colorWhite"
+        android:divider="@android:color/transparent"
+        />
 
+    <android.support.v7.widget.SearchView
+        android:id="@+id/mSearchView"
+        app:queryHint="Buscar...."
+        android:layout_width="match_parent"
+        android:layout_height="22dp" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fbAdd"
         android:layout_width="wrap_content"
@@ -22,9 +31,16 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
-        android:layout_marginBottom="38dp"
+        android:layout_marginBottom="3dp"
         android:clickable="true"
         android:focusable="true"
+        app:backgroundTint="#2F3887"
         app:srcCompat="@android:drawable/ic_input_add" />
-
+<TextView
+    android:layout_below="@+id/mSearchView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Sucesos Registrados"
+    android:textColor="#2F3887"
+    />
 </RelativeLayout>

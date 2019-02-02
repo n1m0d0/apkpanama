@@ -29,8 +29,8 @@
                 android:id="@+id/llContenedor">
 
             </LinearLayout>
-
             <Button
+                android:layout_marginTop="15dp"
                 android:id="@+id/btnSave"
                 android:text="@string/save"
                 android:textColor="@color/colorWhite"

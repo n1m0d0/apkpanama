@@ -79,6 +79,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
                 ir.putExtra("userName", userName);
                 ir.putExtra("idForm", id_form);
                 startActivity(ir);
+                finish();
 
 
             }
@@ -156,6 +157,17 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         msj.show();
 
         Log.w("respuesta", "" + error);
+
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        ir = new Intent(forms.this, events.class);
+        ir.putExtra("auth", auth);
+        ir.putExtra("userName", userName);
+        startActivity(ir);
+        finish();
 
     }
 

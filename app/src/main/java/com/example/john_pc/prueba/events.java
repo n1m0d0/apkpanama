@@ -101,6 +101,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 startActivity(ir);
+                finish();
 
             }
         });

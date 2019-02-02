@@ -56,8 +56,6 @@ public class adapter_events extends BaseAdapter {
 
         obj_events item = items.get(position);
 
-        //if(item.estado_evento == 0){
-
         LinearLayout ll0001 = vi.findViewById(R.id.ll0001);
         ll0001.setBackgroundColor(Color.parseColor(item.colorForm));
 
@@ -79,38 +77,6 @@ public class adapter_events extends BaseAdapter {
             imageBytes = Base64.decode(item.getIdIconForm(), Base64.DEFAULT);
             Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             ivImage.setImageBitmap(decodedImage);
-
-            if (item.id_from == 2){
-
-                ImageView ivImage0003 = vi.findViewById(R.id.iv0003);
-                ivImage0003.setImageResource(R.drawable.usuario);
-
-                TextView tv0003 = vi.findViewById(R.id.tv0003);
-                tv0003.setText("" + item.getNumero_persona());
-
-                ImageView ivImage0004 = vi.findViewById(R.id.iv0004);
-                ivImage0004.setImageResource(R.drawable.container);
-
-                TextView tv0004 = vi.findViewById(R.id.tv0004);
-                tv0004.setText("" + item.getNumero_container());
-
-            } else {
-
-                ImageView ivImage0003 = vi.findViewById(R.id.iv0003);
-                ivImage0003.setVisibility(View.GONE);
-
-                TextView tv0003 = vi.findViewById(R.id.tv0003);
-                tv0003.setVisibility(View.GONE);
-
-                ImageView ivImage0004 = vi.findViewById(R.id.iv0004);
-                ivImage0004.setVisibility(View.GONE);
-
-                TextView tv0004 = vi.findViewById(R.id.tv0004);
-                tv0004.setVisibility(View.GONE);
-
-            }
-
-        //}
 
         return vi;
     }

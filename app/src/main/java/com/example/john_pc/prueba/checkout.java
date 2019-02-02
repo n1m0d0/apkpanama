@@ -829,6 +829,10 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                 msj = Toast.makeText(checkout.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();
                 mProgressDialog.dismiss();
+                ir = new Intent(checkout.this, events.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                startActivity(ir);
                 finish();
 
             }
