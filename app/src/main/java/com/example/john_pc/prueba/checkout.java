@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -127,6 +128,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         llContenedor = findViewById(R.id.llContenedor);
         btnSave = findViewById(R.id.btnSave);
@@ -1232,6 +1234,18 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         builder.setPositiveButton("Aceptar", null);
         builder.create();
         builder.show();
+
+    }
+
+
+    @Override
+    public void onBackPressed(){
+
+        ir = new Intent(checkout.this, events.class);
+        ir.putExtra("auth", auth);
+        ir.putExtra("userName", userName);
+        startActivity(ir);
+        finish();
 
     }
 

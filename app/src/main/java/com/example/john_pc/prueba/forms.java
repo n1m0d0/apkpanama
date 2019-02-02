@@ -2,6 +2,7 @@ package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         gvForms = findViewById(R.id.gvForms);
 

@@ -2,6 +2,7 @@ package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -62,6 +63,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         llContenedor = findViewById(R.id.llContenedor);
 
@@ -87,7 +89,6 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                 ir.putExtra("idForm", "" + generaForm);
                 ir.putExtra("idEvent", "" + idEvent);
                 startActivity(ir);
-
                 finish();
 
                 Log.w("generaForm", "" + "" + generaForm);
@@ -380,6 +381,17 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         textView.setOnClickListener(this);
         textViews.add(textView);
         llContenedor.addView(textView);
+
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        ir = new Intent(view_event.this, events.class);
+        ir.putExtra("auth", auth);
+        ir.putExtra("userName", userName);
+        startActivity(ir);
+        finish();
 
     }
 

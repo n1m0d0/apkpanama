@@ -2,6 +2,7 @@ package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -57,6 +58,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         lvEvents = findViewById(R.id.lvEvents);
         fbAdd = findViewById(R.id.fbAdd);
@@ -88,6 +90,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 ir.putExtra("userName", userName);
                 ir.putExtra("idEvent", id_events);
                 startActivity(ir);
+                finish();
 
 
             }
