@@ -27,7 +27,7 @@
             </LinearLayout>
 
             <Button
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="35dp"
                 android:id="@+id/btnSave"
                 android:text="@string/save"
                 android:background="@drawable/rounded_corner"

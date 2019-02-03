@@ -24,6 +24,7 @@ import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -564,6 +565,12 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
                                 break;
 
+                            case 10:
+
+                                createtextViewTitle(description);
+
+                                break;
+
 
                             default:
                                 break;
@@ -633,6 +640,20 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         et.setFilters(ifet);
         llContenedor.addView(et);
         editTexts.add(et);
+
+    }
+
+    // crear textview en el contenedor
+
+    public void createtextViewTitle(String texto) {
+
+        TextView tv;
+        tv = new TextView(this);
+        tv.setText(texto);
+        tv.setTextSize(20);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextColor(getResources().getColor(R.color.colorBlack));
+        llContenedor.addView(tv);
 
     }
 

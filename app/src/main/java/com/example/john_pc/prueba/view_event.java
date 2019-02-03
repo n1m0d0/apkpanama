@@ -306,6 +306,10 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
         TextView textView = new TextView(this);
         textView.setText(description);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.setMargins(0, 30, 0, 0);
+        textView.setLayoutParams(lastTxtParams);
+        textView.setTextColor(getResources().getColor(R.color.colorBlack));
         llContenedor.addView(textView);
 
 
