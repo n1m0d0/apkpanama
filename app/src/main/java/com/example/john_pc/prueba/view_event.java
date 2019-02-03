@@ -243,6 +243,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
                                 case 7:
 
+                                    createTextView(description);
                                     createTextViewpath(idField, valueInputField);
 
                                     break;
