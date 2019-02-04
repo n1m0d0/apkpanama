@@ -17,11 +17,10 @@
         android:divider="@android:color/transparent"
         />
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/mSearchView"
-        app:queryHint="Buscar...."
+    <EditText android:id="@+id/etSearch"
         android:layout_width="match_parent"
-        android:layout_height="22dp" />
+        android:layout_height="wrap_content"
+        android:hint="Buscar"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fbAdd"
         android:layout_width="wrap_content"

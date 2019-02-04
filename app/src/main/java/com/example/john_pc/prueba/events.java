@@ -6,10 +6,14 @@ import android.content.pm.ActivityInfo;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -30,10 +34,12 @@ import java.util.Map;
 
 public class events extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
 
+    EditText etSearch;
     ListView lvEvents;
     FloatingActionButton fbAdd;
     String id_events;
     ArrayList<obj_events> itemEvents = new ArrayList<obj_events>();
+    ArrayList<obj_events> itemEvents2 = new ArrayList<obj_events>();
     Toast msj;
     String auth;
     String userName;
@@ -52,6 +58,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     int eventState;
     String colorForm;
     String idIconForm;
+    adapter_events adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         lvEvents = findViewById(R.id.lvEvents);
         fbAdd = findViewById(R.id.fbAdd);
+        etSearch = findViewById(R.id.etSearch);
 
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
@@ -105,6 +113,26 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 ir.putExtra("userName", userName);
                 startActivity(ir);
                 finish();
+
+            }
+        });
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                searchItem("" + s);
+                Log.w("buscar", "" + s);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -161,10 +189,11 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 idIconForm = event.getString("idIconForm");
 
                 itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm, personNumber, containerNumber, eventState, colorForm, idIconForm));
+                itemEvents2.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm, personNumber, containerNumber, eventState, colorForm, idIconForm));
 
             }
 
-            adapter_events adapter = new adapter_events(events.this, itemEvents);
+            adapter = new adapter_events(events.this, itemEvents);
             lvEvents.setAdapter(adapter);
 
         }catch (JSONException e) {
@@ -182,6 +211,24 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();
         Log.w("respuesta", "" + error);
+
+    }
+
+    public void searchItem(String texzo) {
+
+        Log.w("buscar", texzo);
+        itemEvents.clear();
+        for(int i = 0; i < itemEvents2.size(); i++) {
+
+            if(itemEvents2.get(i).getVariable().toLowerCase().contains(texzo.toLowerCase())) {
+
+                itemEvents.add(itemEvents2.get(i));
+
+            }
+
+        }
+
+        adapter.notifyDataSetChanged();
 
     }
 
