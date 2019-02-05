@@ -68,6 +68,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -109,6 +110,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     ArrayList<TextView> textViewsDate = new ArrayList<TextView>();
     ArrayList<TextView> textViewsHour = new ArrayList<TextView>();
     ArrayList<TextView> textViewsFiles = new ArrayList<TextView>();
+    ArrayList<String> stringsRegEx = new ArrayList<String>();
     Bitmap bit;
     Uri output;
     Bitmap bmp;
@@ -140,6 +142,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         idForm = parametros.getString("idForm");
         idEvent = parametros.getString("idEvent");
 
+
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
 
@@ -158,6 +161,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
                 JSONArray respuesta = new JSONArray();
 
+                int counterEditText = 0;
                 for (Iterator iterator = editTexts.iterator(); iterator
                         .hasNext();) {
 
@@ -165,9 +169,20 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                     String obs_respuesta = editText.getText().toString().trim();
                     String control =  editText.getHint().toString().trim();
 
+                    String regEx = stringsRegEx.get(counterEditText);
+
+                    Log.w("RegEx", regEx);
+
                     Log.w("controlEditText", control);
 
                     if (obs_respuesta.equals("") && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaEditText", "" + validar);
+
+                    }
+
+                    if (!validarRegEx(obs_respuesta,regEx)) {
 
                         validar++;
                         Log.w("sumaEditText", "" + validar);
@@ -188,6 +203,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    counterEditText++;
 
                 }
 
@@ -505,7 +521,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                             case 1:
 
                                 creartextview(description);
-                                crearedittext(idField, is_mandatory, input_max);
+                                crearedittext(idField, is_mandatory, input_max, input_regx);
 
                                 break;
 
@@ -571,7 +587,6 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
                                 break;
 
-
                             default:
                                 break;
 
@@ -620,26 +635,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         TextView tv;
         tv = new TextView(this);
         tv.setText(texto);
-        tv.getTextSize();
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.setMargins(0, 30, 0, 0);
+        tv.setLayoutParams(lastTxtParams);
         tv.setTextColor(getResources().getColor(R.color.colorBlack));
         llContenedor.addView(tv);
-
-    }
-
-    // crear edittext en el contenedor
-
-    public void crearedittext(int id_opcion, String opcion, int descripcion) {
-
-
-        EditText et = new EditText(this);
-        et.setInputType(InputType.TYPE_CLASS_TEXT);
-        et.setHint(opcion);
-        et.setId(id_opcion);
-        InputFilter[] ifet = new InputFilter[1];
-        ifet[0] = new InputFilter.LengthFilter(descripcion);
-        et.setFilters(ifet);
-        llContenedor.addView(et);
-        editTexts.add(et);
 
     }
 
@@ -654,6 +654,31 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         tv.setGravity(Gravity.CENTER);
         tv.setTextColor(getResources().getColor(R.color.colorBlack));
         llContenedor.addView(tv);
+
+    }
+
+    // crear edittext en el contenedor
+
+    public void crearedittext(int id_opcion, String opcion, int descripcion, String regEx) {
+
+
+        EditText et = new EditText(this);
+        et.setInputType(InputType.TYPE_CLASS_TEXT);
+        et.setHint(opcion);
+        et.setId(id_opcion);
+        InputFilter[] ifet = new InputFilter[1];
+        ifet[0] = new InputFilter.LengthFilter(descripcion);
+        et.setFilters(ifet);
+
+        String [][] reemplazos = { {"(", "{"}, {")", "}"}, {"<", "["}, {">", "]"}};
+        String cadena = regEx;
+        for(String[] reemplazar: reemplazos ) {
+            cadena = cadena.replace(reemplazar[0], reemplazar[1]);
+        }
+
+        llContenedor.addView(et);
+        editTexts.add(et);
+        stringsRegEx.add(cadena);
 
     }
 
@@ -677,6 +702,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         et.setFilters(ifet);
         llContenedor.addView(et);
         editTexts.add(et);
+        stringsRegEx.add("");
 
     }
 
@@ -1251,13 +1277,19 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Importante");
-        builder.setMessage("Debe completar todos los datos Requeridos");
+        builder.setMessage("Debe completar todos los datos Requeridos o llenarlos correctamente");
         builder.setPositiveButton("Aceptar", null);
         builder.create();
         builder.show();
 
     }
 
+    private boolean validarRegEx(String datos, String exreg) {
+
+        Pattern pattern = Pattern.compile(exreg);
+        return pattern.matcher(datos).matches();
+
+    }
 
     @Override
     public void onBackPressed(){

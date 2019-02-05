@@ -68,6 +68,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -108,6 +109,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<TextView> textViewsDate = new ArrayList<TextView>();
     ArrayList<TextView> textViewsHour = new ArrayList<TextView>();
     ArrayList<TextView> textViewsFiles = new ArrayList<TextView>();
+    ArrayList<String> stringsRegEx = new ArrayList<String>();
     Bitmap bit;
     Uri output;
     Bitmap bmp;
@@ -157,6 +159,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 JSONArray respuesta = new JSONArray();
 
+                int counterEditText = 0;
                 for (Iterator iterator = editTexts.iterator(); iterator
                         .hasNext();) {
 
@@ -164,9 +167,20 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     String obs_respuesta = editText.getText().toString().trim();
                     String control =  editText.getHint().toString().trim();
 
+                    String regEx = stringsRegEx.get(counterEditText);
+
+                    Log.w("RegEx", regEx);
+
                     Log.w("controlEditText", control);
 
                     if (obs_respuesta.equals("") && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaEditText", "" + validar);
+
+                    }
+
+                    if (!validarRegEx(obs_respuesta,regEx)) {
 
                         validar++;
                         Log.w("sumaEditText", "" + validar);
@@ -187,6 +201,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    counterEditText++;
 
                 }
 
@@ -504,7 +519,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 1:
 
                                 creartextview(description);
-                                crearedittext(idField, is_mandatory, input_max);
+                                crearedittext(idField, is_mandatory, input_max, input_regx);
 
                                 break;
 
@@ -642,7 +657,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // crear edittext en el contenedor
 
-    public void crearedittext(int id_opcion, String opcion, int descripcion) {
+    public void crearedittext(int id_opcion, String opcion, int descripcion, String regEx) {
 
 
         EditText et = new EditText(this);
@@ -652,8 +667,16 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
         et.setFilters(ifet);
+
+        String [][] reemplazos = { {"(", "{"}, {")", "}"}, {"<", "["}, {">", "]"}};
+        String cadena = regEx;
+        for(String[] reemplazar: reemplazos ) {
+            cadena = cadena.replace(reemplazar[0], reemplazar[1]);
+        }
+
         llContenedor.addView(et);
         editTexts.add(et);
+        stringsRegEx.add(cadena);
 
     }
 
@@ -677,6 +700,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         et.setFilters(ifet);
         llContenedor.addView(et);
         editTexts.add(et);
+        stringsRegEx.add("");
 
     }
 
@@ -1251,10 +1275,17 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Importante");
-        builder.setMessage("Debe completar todos los datos Requeridos");
+        builder.setMessage("Debe completar todos los datos Requeridos o llenarlos correctamente");
         builder.setPositiveButton("Aceptar", null);
         builder.create();
         builder.show();
+
+    }
+
+    private boolean validarRegEx(String datos, String exreg) {
+
+        Pattern pattern = Pattern.compile(exreg);
+        return pattern.matcher(datos).matches();
 
     }
 

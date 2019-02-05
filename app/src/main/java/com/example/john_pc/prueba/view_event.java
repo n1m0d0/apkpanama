@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class view_event extends AppCompatActivity implements View.OnClickListener {
 
@@ -237,14 +239,26 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                                 case 6:
 
                                     createTextView(description);
-                                    createImageView(idField, valueFile, valueInputField);
+                                    if (valueInputField.equals("")){
+
+                                    } else {
+
+                                        createImageView(idField, valueFile, valueInputField);
+
+                                    }
 
                                     break;
 
                                 case 7:
 
                                     createTextView(description);
-                                    createTextViewpath(idField, valueInputField);
+                                    if (valueInputField.equals("")){
+
+                                    } else {
+
+                                        createTextViewpath(idField, valueInputField);
+
+                                    }
 
                                     break;
 
@@ -258,6 +272,12 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                                 case 9:
 
                                     createSwitch(description, valueInputField);
+
+                                    break;
+
+                                case 10:
+
+                                    createtextViewTitle(description);
 
                                     break;
 
@@ -313,6 +333,18 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextColor(getResources().getColor(R.color.colorBlack));
         llContenedor.addView(textView);
 
+
+    }
+
+    public void createtextViewTitle(String texto) {
+
+        TextView tv;
+        tv = new TextView(this);
+        tv.setText(texto);
+        tv.setTextSize(20);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextColor(getResources().getColor(R.color.colorBlack));
+        llContenedor.addView(tv);
 
     }
 
