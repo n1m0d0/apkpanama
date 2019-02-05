@@ -11,6 +11,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -168,10 +169,10 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                     EditText editText = (EditText) iterator.next();
                     String obs_respuesta = editText.getText().toString().trim();
                     String control =  editText.getHint().toString().trim();
-
+                    editText.setTextColor(Color.BLACK);
                     String regEx = stringsRegEx.get(counterEditText);
 
-                    Log.w("RegEx", regEx);
+                    Log.w("RegEx", regEx + " posicion " + counterEditText);
 
                     Log.w("controlEditText", control);
 
@@ -180,13 +181,16 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                         validar++;
                         Log.w("sumaEditText", "" + validar);
 
-                    }
-
-                    if (!validarRegEx(obs_respuesta,regEx)) {
-
-                        validar++;
-                        Log.w("sumaEditText", "" + validar);
-
+                    } else {
+                        if(!obs_respuesta.equals("")) {
+                            if (!regEx.equals("")) {
+                                if (!validarRegEx(obs_respuesta, regEx)) {
+                                    validar++;
+                                    Log.w("sumaEditText", "" + validar);
+                                    editText.setTextColor(Color.RED);
+                                }
+                            }
+                        }
                     }
 
                     Log.w("control", "" + validar);
@@ -670,7 +674,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         ifet[0] = new InputFilter.LengthFilter(descripcion);
         et.setFilters(ifet);
 
-        String [][] reemplazos = { {"(", "{"}, {")", "}"}, {"<", "["}, {">", "]"}};
+        String [][] reemplazos = { {"(", "{"}, {")", "}"}, {"<", "["}, {">", "]"}, {"¿", "("}, {"?", ")"}};
         String cadena = regEx;
         for(String[] reemplazar: reemplazos ) {
             cadena = cadena.replace(reemplazar[0], reemplazar[1]);
