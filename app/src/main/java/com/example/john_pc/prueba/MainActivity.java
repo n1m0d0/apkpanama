@@ -1,13 +1,19 @@
 package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -109,7 +115,46 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                         credentials = etUser.getText().toString().trim()+":"+password;
                         auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-                        cargarLogin();
+                        if(compruebaConexion(this)) {
+
+                            cargarLogin();
+
+                        } else {
+
+                            msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
+                            msj.setGravity(Gravity.CENTER, 0, 0);
+                            msj.show();
+
+                            try {
+
+                                bd conexion = new bd(this);
+                                conexion.abrir();
+                                Cursor usuario = conexion.login(etUser.getText().toString().trim(), auth);
+                                if (usuario.moveToFirst() == false) {
+
+                                    msj = Toast.makeText(this, "Usuario o Clave incorrecto!!", Toast.LENGTH_LONG);
+                                    msj.setGravity(Gravity.CENTER, 0, 0);
+                                    msj.show();
+
+                                } else {
+
+                                    ir = new Intent(this, events.class);
+                                    ir.putExtra("auth", auth);
+                                    ir.putExtra("userName", etUser.getText().toString().trim());
+                                    startActivity(ir);
+                                    conexion.cerrar();
+
+                                }
+
+                            } catch (Exception e) {
+
+                                e.printStackTrace();
+
+                            }
+
+                        }
+
+
 
                     }
 
@@ -179,8 +224,31 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         if(code == 0) {
 
-            msj = Toast.makeText(this, "Bienvenido!!" + response, Toast.LENGTH_LONG);
+            msj = Toast.makeText(this, "Bienvenido!!", Toast.LENGTH_LONG);
+            msj.setGravity(Gravity.CENTER, 0, 0);
             msj.show();
+
+            try {
+
+                bd conexion = new bd(this);
+                conexion.abrir();
+                Cursor usuario = conexion.searchUser(etUser.getText().toString().trim());
+                if (usuario.moveToFirst() == false) {
+
+                    Log.w("aqui", "aqui");
+                    conexion.createUser(etUser.getText().toString().trim(), auth);
+
+                }
+                else {
+                    conexion.updateUser(etUser.getText().toString().trim(), auth);
+                }
+                conexion.cerrar();
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
 
             ir = new Intent(this, events.class);
             ir.putExtra("auth", auth);
@@ -189,7 +257,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         } else {
 
-            msj = Toast.makeText(this, "Usuario o Clave incorrecto!!" + response, Toast.LENGTH_LONG);
+            msj = Toast.makeText(this, "Usuario o Clave incorrecto!!", Toast.LENGTH_LONG);
+            msj.setGravity(Gravity.CENTER, 0, 0);
             msj.show();
 
         }
@@ -227,6 +296,25 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         String result = formatter.toString();
         formatter.close();
         return result;
+    }
+
+    public static boolean compruebaConexion(Context context) {
+
+        boolean connected = false;
+
+        ConnectivityManager connec = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Recupera todas las redes (tanto móviles como wifi)
+        NetworkInfo[] redes = connec.getAllNetworkInfo();
+
+        for (int i = 0; i < redes.length; i++) {
+            // Si alguna red tiene conexión, se devuelve true
+            if (redes[i].getState() == NetworkInfo.State.CONNECTED) {
+                connected = true;
+            }
+        }
+        return connected;
     }
 
 }
