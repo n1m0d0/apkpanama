@@ -30,6 +30,7 @@
                 android:layout_marginTop="35dp"
                 android:id="@+id/btnSave"
                 android:text="@string/save"
+                android:textColor="@color/colorWhite"
                 android:background="@drawable/rounded_corner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -638,6 +640,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         TextView tv;
         tv = new TextView(this);
         tv.setText(texto);
+        tv.setTextSize(14);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.setMargins(0, 30, 0, 0);
         tv.setLayoutParams(lastTxtParams);
@@ -653,9 +656,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         TextView tv;
         tv = new TextView(this);
         tv.setText(texto);
-        tv.setTextSize(20);
-        tv.setGravity(Gravity.CENTER);
-        tv.setTextColor(getResources().getColor(R.color.colorBlack));
+        tv.setTextAppearance(this, R.style.boldreg);
         llContenedor.addView(tv);
 
     }
@@ -667,6 +668,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
+        et.setTextSize(14);
         et.setHint(opcion);
         et.setId(id_opcion);
         InputFilter[] ifet = new InputFilter[1];
@@ -691,9 +693,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         EditText et = new EditText(this);
         et.setSingleLine(false);
+        et.setTextSize(14);
         et.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
         et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        et.setLines(5);
+        et.setLines(1);
         et.setMaxLines(10);
         et.setVerticalScrollBarEnabled(true);
         et.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -715,6 +718,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         TextView textView = new TextView(this);
         textView.setId(id);
+        textView.setTextSize(14);
         textView.setText(textDate);
         textView.setHint(option);
         textView.setOnClickListener(form_event.this);
@@ -729,6 +733,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         TextView textView = new TextView(this);
         textView.setId(id);
+        textView.setTextSize(14);
         textView.setText(textHour);
         textView.setHint(option);
         textView.setOnClickListener(form_event.this);
@@ -791,6 +796,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         Switch s = new Switch(this);
         s.setId(idField);
         s.setText(description);
+        s.setTextSize(14);
+        s.setTextColor(getResources().getColor(R.color.colorBlack));
         s.setTextOn("Si");
         s.setTextOff("No");
         s.setChecked(true);
@@ -849,6 +856,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         TextView textView = new TextView(this);
         textView.setId(idField);
+        textView.setTextSize(14);
         textView.setText(textFile);
         textView.setHint(option);
         textView.setOnClickListener(this);
@@ -1233,7 +1241,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         mMonth = mcurrentDate.get(Calendar.MONTH);
         mDay  =mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog mdatePickerDialog = new DatePickerDialog(form_event.this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog mdatePickerDialog = new DatePickerDialog(form_event.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
@@ -1259,7 +1267,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         mHour = mcurrentDate.get(Calendar.HOUR_OF_DAY);
         mMinute = mcurrentDate.get(Calendar.MINUTE);
 
-        TimePickerDialog mTimePickerDialog = new TimePickerDialog(form_event.this, new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog mTimePickerDialog = new TimePickerDialog(form_event.this, R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 

@@ -333,7 +333,6 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextColor(getResources().getColor(R.color.colorBlack));
         llContenedor.addView(textView);
 
-
     }
 
     public void createtextViewTitle(String texto) {
@@ -341,9 +340,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         TextView tv;
         tv = new TextView(this);
         tv.setText(texto);
-        tv.setTextSize(20);
-        tv.setGravity(Gravity.CENTER);
-        tv.setTextColor(getResources().getColor(R.color.colorBlack));
+        tv.setTextAppearance(this, R.style.boldreg);
         llContenedor.addView(tv);
 
     }
@@ -363,7 +360,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         et.setSingleLine(false);
         et.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
         et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        et.setLines(5);
+        et.setLines(1);
         et.setMaxLines(10);
         et.setVerticalScrollBarEnabled(true);
         et.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -382,6 +379,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         boolean variable = Boolean.parseBoolean (valor);
         Switch s = new Switch(this);
         s.setText(description);
+        s.setTextColor(getResources().getColor(R.color.colorBlack));
         s.setTextOn("Si");
         s.setTextOff("No");
         s.setChecked(variable);

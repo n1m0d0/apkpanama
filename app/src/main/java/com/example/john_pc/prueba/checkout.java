@@ -639,6 +639,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         TextView tv;
         tv = new TextView(this);
         tv.setText(texto);
+        tv.setTextSize(14);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.setMargins(0, 30, 0, 0);
         tv.setLayoutParams(lastTxtParams);
@@ -654,9 +655,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         TextView tv;
         tv = new TextView(this);
         tv.setText(texto);
-        tv.setTextSize(20);
-        tv.setGravity(Gravity.CENTER);
-        tv.setTextColor(getResources().getColor(R.color.colorBlack));
+        tv.setTextAppearance(this, R.style.boldreg);
         llContenedor.addView(tv);
 
     }
@@ -668,6 +667,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
+        et.setTextSize(14);
         et.setHint(opcion);
         et.setId(id_opcion);
         InputFilter[] ifet = new InputFilter[1];
@@ -692,9 +692,10 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         EditText et = new EditText(this);
         et.setSingleLine(false);
+        et.setTextSize(14);
         et.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
         et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        et.setLines(5);
+        et.setLines(1);
         et.setMaxLines(10);
         et.setVerticalScrollBarEnabled(true);
         et.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -716,6 +717,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         TextView textView = new TextView(this);
         textView.setId(id);
+        textView.setTextSize(14);
         textView.setText(textDate);
         textView.setHint(option);
         textView.setOnClickListener(checkout.this);
@@ -730,6 +732,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         TextView textView = new TextView(this);
         textView.setId(id);
+        textView.setTextSize(14);
         textView.setText(textHour);
         textView.setHint(option);
         textView.setOnClickListener(checkout.this);
@@ -792,6 +795,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         Switch s = new Switch(this);
         s.setId(idField);
         s.setText(description);
+        s.setTextSize(14);
+        s.setTextColor(getResources().getColor(R.color.colorBlack));
         s.setTextOn("Si");
         s.setTextOff("No");
         s.setChecked(true);
@@ -850,6 +855,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         TextView textView = new TextView(this);
         textView.setId(idField);
+        textView.setTextSize(14);
         textView.setText(textFile);
         textView.setHint(option);
         textView.setOnClickListener(this);
@@ -1234,7 +1240,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         mMonth = mcurrentDate.get(Calendar.MONTH);
         mDay  =mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog mdatePickerDialog = new DatePickerDialog(checkout.this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog mdatePickerDialog = new DatePickerDialog(checkout.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
@@ -1260,7 +1266,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         mHour = mcurrentDate.get(Calendar.HOUR_OF_DAY);
         mMinute = mcurrentDate.get(Calendar.MINUTE);
 
-        TimePickerDialog mTimePickerDialog = new TimePickerDialog(checkout.this, new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog mTimePickerDialog = new TimePickerDialog(checkout.this, R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 

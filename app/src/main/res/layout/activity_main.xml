@@ -97,8 +97,8 @@
                 android:background="@drawable/rounded_corner"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:text="ingresar"
-                android:textColor="#2F3887"
+                android:text="Login"
+                android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
