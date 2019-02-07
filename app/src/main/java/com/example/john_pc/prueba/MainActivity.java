@@ -235,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                 Cursor usuario = conexion.searchUser(etUser.getText().toString().trim());
                 if (usuario.moveToFirst() == false) {
 
-                    Log.w("aqui", "aqui");
                     conexion.createUser(etUser.getText().toString().trim(), auth);
 
                 }

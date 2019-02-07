@@ -1,19 +1,23 @@
 package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -79,7 +83,15 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         msj = Toast.makeText(this, auth + " " + userName, Toast.LENGTH_LONG);
         msj.show();
 
-        cargarEventos();
+        if(compruebaConexion(this)) {
+
+            cargarEventos();
+
+        } else {
+
+            cargarEventosOffline();
+
+        }
 
         //funcionalidad a la lista
         lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -171,6 +183,27 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         mProgressDialog.dismiss();
 
+        try {
+
+            bd conexion = new bd(this);
+            String events = conexion.searchListEvents(1);
+            if (events == null) {
+
+                conexion.createListEvents(1,"" + response);
+
+            }
+            else {
+
+                conexion.updatListEvents(1, "" + response);
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
         try{
 
             for(int i=0;i<response.length();i++) {
@@ -230,6 +263,82 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         adapter.notifyDataSetChanged();
 
+    }
+
+    public void cargarEventosOffline() {
+
+        try {
+
+            bd conexion = new bd(this);
+            String events = conexion.searchListEvents(1);
+            if (events == null) {
+
+                msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
+                msj.setGravity(Gravity.CENTER, 0, 0);
+                msj.show();
+
+            } else {
+
+                try{
+
+                    JSONArray response = new JSONArray(events);
+
+                    for(int i=0;i<response.length();i++) {
+
+                        JSONObject event = response.getJSONObject(i);
+
+                        idForm = event.getInt("idForm");
+                        idEvent = event.getInt("idEvent");
+                        keyValue = event.getString("keyValue");
+                        dateEventBegin = event.getString("dateEventBegin");
+                        dateEventEnd = event.getString("dateEventEnd");
+                        personNumber = event.getInt("personNumber");
+                        containerNumber = event.getInt("containerNumber");
+                        eventState = event.getInt("eventState");
+                        colorForm = event.getString("colorForm");
+                        idIconForm = event.getString("idIconForm");
+
+                        itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm, personNumber, containerNumber, eventState, colorForm, idIconForm));
+                        itemEvents2.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm, personNumber, containerNumber, eventState, colorForm, idIconForm));
+
+                    }
+
+                    adapter = new adapter_events(events.this, itemEvents);
+                    lvEvents.setAdapter(adapter);
+
+                }catch (JSONException e) {
+
+                    e.printStackTrace();
+
+                }
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public static boolean compruebaConexion(Context context) {
+
+        boolean connected = false;
+
+        ConnectivityManager connec = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Recupera todas las redes (tanto móviles como wifi)
+        NetworkInfo[] redes = connec.getAllNetworkInfo();
+
+        for (int i = 0; i < redes.length; i++) {
+            // Si alguna red tiene conexión, se devuelve true
+            if (redes[i].getState() == NetworkInfo.State.CONNECTED) {
+                connected = true;
+            }
+        }
+        return connected;
     }
 
 }
