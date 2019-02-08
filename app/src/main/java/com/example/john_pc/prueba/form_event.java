@@ -134,7 +134,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     Handler hand = new Handler();
     String fecha_2;
     String fecha_1;
-    String mLocation = "-
+    String mLocation = "-1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
