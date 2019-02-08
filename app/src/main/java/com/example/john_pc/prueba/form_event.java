@@ -480,6 +480,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         mRequestQueue = Volley.newRequestQueue(this);
 
         mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onResponse(JSONArray response) {
 
@@ -801,6 +802,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     }
 
     // crear Switch
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void createSwitch(int idField, String description){
 
 
@@ -809,6 +811,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         s.setText(description);
         s.setTextSize(14);
         s.setTextColor(getResources().getColor(R.color.colorBlack));
+        s.getThumbDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
+        s.getTrackDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
         s.setTextOn("Si");
         s.setTextOff("No");
         s.setChecked(true);

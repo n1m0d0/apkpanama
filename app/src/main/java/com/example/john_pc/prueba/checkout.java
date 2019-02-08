@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,6 +24,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -479,6 +481,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         mRequestQueue = Volley.newRequestQueue(this);
 
         mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onResponse(JSONArray response) {
 
@@ -800,6 +803,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     }
 
     // crear Switch
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void createSwitch(int idField, String description){
 
 
@@ -808,6 +812,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         s.setText(description);
         s.setTextSize(14);
         s.setTextColor(getResources().getColor(R.color.colorBlack));
+        s.getThumbDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
+        s.getTrackDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
         s.setTextOn("Si");
         s.setTextOff("No");
         s.setChecked(true);
