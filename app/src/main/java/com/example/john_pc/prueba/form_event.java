@@ -1,9 +1,11 @@
 package com.example.john_pc.prueba;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -14,6 +16,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -21,6 +26,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -128,6 +134,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     Handler hand = new Handler();
     String fecha_2;
     String fecha_1;
+    String mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +160,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         url = url + idForm;
 
         cargarFormulario();
+
+        localizar();
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -428,12 +437,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 }
 
+                localizar();
+
                 //Log.w("json", "" + respuesta);
                 try {
                     jsonenvio.put("idEvent", "0");
                     jsonenvio.put("idEventDependency", "0");
                     jsonenvio.put("dateEvent", fecha_2);
-                    jsonenvio.put("posGeo", "123456789");
+                    jsonenvio.put("posGeo", mLocation);
                     jsonenvio.put("idForm", idForm);
                     jsonenvio.put("P", respuesta);
 
@@ -886,8 +897,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             public void onResponse(JSONObject response) {
 
                 Log.w("mio", "" + response);
-                msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
-                msj.show();
+                /*msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
+                msj.show();*/
                 mProgressDialog.dismiss();
                 ir = new Intent(form_event.this, events.class);
                 ir.putExtra("auth", auth);
@@ -923,8 +934,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
 
-        msj = Toast.makeText(this, "" + v.getId(), Toast.LENGTH_LONG);
-        msj.show();
+        /*msj = Toast.makeText(this, "" + v.getId(), Toast.LENGTH_LONG);
+        msj.show();*/
 
         opcion = v.getId();
 
@@ -1299,6 +1310,55 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         Pattern pattern = Pattern.compile(exreg);
         return pattern.matcher(datos).matches();
+
+    }
+
+    public void localizar () {
+
+        LocationManager lm;
+        LocationListener datos;
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        datos = new LocationListener() {
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                // TODO Auto-generated method stub
+
+            }
+
+            public void onProviderEnabled(String provider) {
+                // TODO Auto-generated method stub
+
+                Toast.makeText(getApplicationContext(), "Gps Activo", Toast.LENGTH_SHORT).show();
+
+            }
+
+            public void onProviderDisabled(String provider) {
+                // TODO Auto-generated method stub
+
+                Toast.makeText(getApplicationContext(), "Gps Desactivado", Toast.LENGTH_SHORT).show();
+
+            }
+
+            public void onLocationChanged(Location loc) {
+                // TODO Auto-generated method stub
+
+                loc.getLongitude();
+                loc.getLatitude();
+                mLocation = "" + loc.getLatitude() + " , " + loc.getLongitude();
+
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+        }
+
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, datos);
 
     }
 

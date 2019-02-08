@@ -80,8 +80,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         userName = parametros.getString("userName");
 
         //funcionn para llenar el array de itemEvents y mostrarlo en el ListView
-        msj = Toast.makeText(this, auth + " " + userName, Toast.LENGTH_LONG);
-        msj.show();
+        /*msj = Toast.makeText(this, auth + " " + userName, Toast.LENGTH_LONG);
+        msj.show();*/
 
         if(compruebaConexion(this)) {
 
@@ -102,8 +102,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                 // recuperamos el id
                 id_events = "" + elegido.getId();
-                msj = Toast.makeText(events.this, "Evento elegido: " + id_events, Toast.LENGTH_LONG);
-                msj.show();
+                /*msj = Toast.makeText(events.this, "Evento elegido: " + id_events, Toast.LENGTH_LONG);
+                msj.show();*/
                 // llamar a la funcion para ver el evento
                 ir = new Intent(events.this, view_event.class);
                 ir.putExtra("auth", auth);
@@ -232,6 +232,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         }catch (JSONException e) {
 
             e.printStackTrace();
+            msj = Toast.makeText(this, "No se tiene datos registrados", Toast.LENGTH_LONG);
+            msj.show();
 
         }
 
@@ -241,8 +243,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     public void onErrorResponse(VolleyError error) {
 
         mProgressDialog.dismiss();
-        msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
-        msj.show();
+        /*msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
+        msj.show();*/
         Log.w("respuesta", "" + error);
 
     }

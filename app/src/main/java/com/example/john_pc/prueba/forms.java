@@ -73,8 +73,8 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
                 // recuperamos el id
                 id_form = "" + elegido.getId();
-                msj = Toast.makeText(forms.this, "Formulario elegido elegido: " + id_form, Toast.LENGTH_LONG);
-                msj.show();
+                /*msj = Toast.makeText(forms.this, "Formulario elegido elegido: " + id_form, Toast.LENGTH_LONG);
+                msj.show();*/
                 // llamar a la funcion para ver el formulario
                 ir = new Intent(forms.this, form_event.class);
                 ir.putExtra("auth", auth);
@@ -142,8 +142,8 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         }catch (JSONException e) {
 
             e.printStackTrace();
-            msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
-            msj.show();
+            /*msj = Toast.makeText(this, "" + e, Toast.LENGTH_LONG);
+            msj.show();*/
 
             Log.w("respuesta", "" + e);
 
@@ -155,8 +155,8 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     public void onErrorResponse(VolleyError error) {
 
         mProgressDialog.dismiss();
-        msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
-        msj.show();
+        /*msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
+        msj.show();*/
 
         Log.w("respuesta", "" + error);
 
