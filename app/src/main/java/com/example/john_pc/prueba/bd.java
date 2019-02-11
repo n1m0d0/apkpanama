@@ -30,16 +30,16 @@ public class bd {
     // TABLA DE LISTA DE EVENTOS
     // TABLA EVENTO
     private static final String idListEvents = "_id";
-    private static final String listEventsJson = "listEventsJson";
+    private static final String listEventsJson = "path";
 
     // BASE DE DATOS TABLAS
-    private static final String BD = "BD_SISFORM";
+    private static final String BD = "BD_GEO";
     private static final String user = "user";
     private static final String form = "form";
     private static final String event = "event";
     private static final String listEvents = "listEvents";
     private static final String  reg = "reg";
-    private static final int VERSION_BD = 1;
+    private static final int VERSION_BD = 10;
 
     private BDHelper nHelper;
     private final Context nContexto;
@@ -58,23 +58,23 @@ public class bd {
 
             db.execSQL("CREATE TABLE " + user + "(" + idUser
                     + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + nameUser
-                    + " TEXT NOT NULL, " + codeUser + " TEXT NOT NULL) ;");
+                    + " TEXT NOT NULL, " + codeUser + " TEXT NOT NULL);");
 
             db.execSQL("CREATE TABLE " + form + "(" + idForm
-                    + " INTEGER PRIMARY KEY NOT NULL, " + formJson
-                    + " TEXT NOT NULL) ;");
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + formJson
+                    + " TEXT NOT NULL);");
 
             db.execSQL("CREATE TABLE " + event + "(" + idEvent
-                    + " INTEGER PRIMARY KEY NOT NULL, " + eventJson
-                    + " TEXT NOT NULL) ;");
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + eventJson
+                    + " TEXT NOT NULL);");
 
             db.execSQL("CREATE TABLE " + reg + "(" + idReg
-                    + " INTEGER PRIMARY KEY NOT NULL, " + regJson
-                    + " TEXT NOT NULL) ;");
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + regJson
+                    + " TEXT NOT NULL);");
 
             db.execSQL("CREATE TABLE " + listEvents + "(" + idListEvents
-                    + " INTEGER PRIMARY KEY NOT NULL, " + listEventsJson
-                    + " TEXT NOT NULL) ;");
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + listEventsJson
+                    + " TEXT NOT NULL);");
 
 
         }
@@ -164,7 +164,7 @@ public class bd {
     }
 
     //listEvents
-    public String  searchListEvents(int id) throws SQLException {
+    public String  searchListEvents(long id) throws SQLException {
 
         String events = null;
         String selectQuery = "SELECT * FROM " + listEvents + " WHERE "
@@ -186,19 +186,18 @@ public class bd {
         return events;
     }
 
-    public long createListEvents(int id, String listEventsJson)
+    public long createListEvents(String path)
             throws SQLException {
         // TODO Auto-generated method stub
 
-        Log.w("jsonmio", listEventsJson);
         ContentValues cv = new ContentValues();
-        cv.put(this.idListEvents, id);
-        cv.put(this.listEventsJson, listEventsJson);
+        cv.put(listEventsJson, path);
+
         return nBD.insert(listEvents, null, cv);
 
     }
 
-    public void updatListEvents(int id, String listEventsJson) throws SQLException {
+    public void updateListEvents(int id, String listEventsJson) throws SQLException {
         // TODO Auto-generated method stub
 
         ContentValues cv = new ContentValues();

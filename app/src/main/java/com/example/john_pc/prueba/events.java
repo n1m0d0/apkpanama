@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -189,12 +197,15 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             String events = conexion.searchListEvents(1);
             if (events == null) {
 
-                conexion.createListEvents(1,"" + response);
+                String path = createJson(response);
+                Log.w("path000", path);
+                conexion.createListEvents(path);
 
             }
             else {
 
-                conexion.updatListEvents(1, "" + response);
+                String path = createJson(response);
+                conexion.updateListEvents(1, path);
 
             }
 
@@ -270,9 +281,12 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     public void cargarEventosOffline() {
 
         try {
-
+            Log.w("path", "estoy aqui");
             bd conexion = new bd(this);
-            String events = conexion.searchListEvents(1);
+            String path = conexion.searchListEvents(1);
+
+            Log.w("path", "" + path);
+            String events = readJsonFile(path);
             if (events == null) {
 
                 msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
@@ -341,6 +355,65 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             }
         }
         return connected;
+    }
+
+    public String createJson(JSONArray jsonArray) {
+
+        String path = null;
+        String carpeta = "geoport";
+        File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
+        boolean isCreada = fileJson.exists();
+        String nombreJson = "";
+
+        if(isCreada == false) {
+
+            isCreada = fileJson.mkdir();
+
+        }
+
+        if(isCreada == true) {
+
+            nombreJson = "events.json";
+
+        }
+
+        path = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nombreJson;
+
+
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.write(String.valueOf(jsonArray));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return path;
+    }
+
+    public String readJsonFile (String path) {
+
+        Log.w("ver", path);
+
+        String jsonevents = null;
+
+        String json = null;
+        try {
+            File f = new File(path);
+            BufferedReader fin =
+                    new BufferedReader(
+                            new InputStreamReader(
+                                    new FileInputStream(f)));
+
+            jsonevents = fin.readLine();
+            fin.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        return jsonevents;
     }
 
 }
