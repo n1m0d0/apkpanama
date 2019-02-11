@@ -19,8 +19,11 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -67,10 +70,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -136,6 +143,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String fecha_1;
     String mLocation = "-1";
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -159,7 +167,15 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         url = url + idForm;
 
-        cargarFormulario();
+        if(compruebaConexion(this)) {
+
+            cargarFormulario();
+
+        } else {
+
+            cargarFormularioOffline();
+
+        }
 
         localizar();
 
@@ -487,6 +503,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 Log.w("respuesta", "" + response);
 
                 mProgressDialog.dismiss();
+
+                try {
+                    createJson(response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 try {
 
@@ -1375,6 +1397,238 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         startActivity(ir);
         finish();
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void cargarFormularioOffline() {
+
+        try {
+            String formulario = readJsonFile("/storage/emulated/0/geoport/form" + idForm + ".json");
+            if (formulario == null) {
+
+                msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
+                msj.setGravity(Gravity.CENTER, 0, 0);
+                msj.show();
+
+            } else {
+
+                try {
+
+                    JSONArray response = new JSONArray(formulario);
+
+                    for (int i = 0; i < response.length(); i++) {
+
+                        JSONObject form = response.getJSONObject(i);
+
+                        idField = form.getInt("IDFIELD");
+                        String name = form.getString("NAME");
+                        String description = form.getString("DESCRIPTION");
+                        int position = form.getInt("POSITION");
+                        int type = form.getInt("TYPE");
+                        int idparameter = form.getInt("IDPARAMETER");
+                        int input_max = form.getInt("INPUT_MAX");
+                        String input_regx = form.getString("INPUT_REGEX");
+                        //int input_datemin = form.getInt("INPUT_DATEMIN");
+                        //int input_datemax = form.getInt("INPUT_DATEMAX");
+                        //String photo_resolution = form.getString("PHOTO_RESOLUTION");
+                        int file_size = form.getInt("FILE_SIZE");
+                        int reg_begin = form.getInt("REG_BEGIN");
+                        int reg_end = form.getInt("REG_END");
+                        String is_mandatory = form.getString("IS_MANDATORY");
+                        int is_keybaule = form.getInt("IS_KEYVALUE");
+
+
+                        JSONArray opciones = form.getJSONArray("P");
+
+                        String[] listopcion = new String[opciones.length()];
+
+                        ArrayList<obj_params> itemp = new ArrayList<obj_params>();
+
+                        for (int j = 0; j < opciones.length(); j++) {
+
+                            JSONObject op = opciones.getJSONObject(j);
+                            int valor = op.getInt("IDVALUE");
+                            String des = op.getString("DESCRIPTION");
+
+                            listopcion[j] = des;
+
+                            itemp.add(new obj_params(valor, des));
+
+                            Log.w("Description opcion", listopcion[j]);
+
+                        }
+
+
+                        switch (type) {
+
+                            case 1:
+
+                                creartextview(description);
+                                crearedittext(idField, is_mandatory, input_max, input_regx);
+
+                                break;
+
+                            case 2:
+
+                                creartextview(description);
+                                crearedittextmultilinea(idField, is_mandatory, input_max);
+
+                                break;
+
+                            case 3:
+
+                                creartextview(description);
+                                createSpinner(idField, itemp);
+
+
+                                break;
+
+                            case 4:
+
+                                creartextview(description);
+                                createTextViewDate(idField, is_mandatory);
+
+                                break;
+
+                            case 5:
+
+                                creartextview(description);
+                                createTextViewHour(idField, is_mandatory);
+
+                                break;
+
+                            case 6:
+
+                                creartextview(description);
+                                createImageView(idField, is_mandatory);
+
+                                break;
+
+                            case 7:
+
+                                creartextview(description);
+                                createTextviewFile(idField,is_mandatory);
+
+                                break;
+
+                            case 8:
+
+                                creartextview(description);
+                                createSpinner(idField, itemp);
+
+                                break;
+
+                            case 9:
+
+                                createSwitch(idField, description);
+
+                                break;
+
+                            case 10:
+
+                                createtextViewTitle(description);
+
+                                break;
+
+                            default:
+                                break;
+
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
+                    Log.w("jsonException", "" + e);
+
+                }
+
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public static boolean compruebaConexion(Context context) {
+
+        boolean connected = false;
+
+        ConnectivityManager connec = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Recupera todas las redes (tanto móviles como wifi)
+        NetworkInfo[] redes = connec.getAllNetworkInfo();
+
+        for (int i = 0; i < redes.length; i++) {
+            // Si alguna red tiene conexión, se devuelve true
+            if (redes[i].getState() == NetworkInfo.State.CONNECTED) {
+                connected = true;
+            }
+        }
+        return connected;
+    }
+
+    public void createJson(JSONArray jsonArray) {
+
+        String path = null;
+        String carpeta = "geoport";
+        File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
+        boolean isCreada = fileJson.exists();
+        String nombreJson = "";
+
+        if(isCreada == false) {
+
+            isCreada = fileJson.mkdir();
+
+        }
+
+        if(isCreada == true) {
+
+            nombreJson = "form" + idForm + ".json";
+
+        }
+
+        path = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nombreJson;
+
+
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.write(String.valueOf(jsonArray));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String readJsonFile (String path) {
+
+        Log.w("ver", path);
+
+        String jsonevents = null;
+
+        String json = null;
+        try {
+            File f = new File(path);
+            BufferedReader fin =
+                    new BufferedReader(
+                            new InputStreamReader(
+                                    new FileInputStream(f)));
+
+            jsonevents = fin.readLine();
+            fin.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        return jsonevents;
     }
 
 }

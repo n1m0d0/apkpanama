@@ -192,27 +192,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         mProgressDialog.dismiss();
 
         try {
-
-            bd conexion = new bd(this);
-            String events = conexion.searchListEvents(1);
-            if (events == null) {
-
-                String path = createJson(response);
-                Log.w("path000", path);
-                conexion.createListEvents(path);
-
-            }
-            else {
-
-                String path = createJson(response);
-                conexion.updateListEvents(1, path);
-
-            }
-
+            createJson(response);
         } catch (Exception e) {
-
             e.printStackTrace();
-
         }
 
         try{
@@ -281,12 +263,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     public void cargarEventosOffline() {
 
         try {
-            Log.w("path", "estoy aqui");
-            bd conexion = new bd(this);
-            String path = conexion.searchListEvents(1);
-
-            Log.w("path", "" + path);
-            String events = readJsonFile(path);
+            String events = readJsonFile("/storage/emulated/0/geoport/events.json");
             if (events == null) {
 
                 msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
@@ -357,7 +334,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         return connected;
     }
 
-    public String createJson(JSONArray jsonArray) {
+    public void createJson(JSONArray jsonArray) {
 
         String path = null;
         String carpeta = "geoport";
@@ -388,8 +365,6 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             e.printStackTrace();
         }
 
-
-        return path;
     }
 
     public String readJsonFile (String path) {
