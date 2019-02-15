@@ -1,10 +1,13 @@
 package com.example.john_pc.prueba;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -59,6 +63,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     Intent ir;
     int generaForm;
     int idForm;
+    Toast msj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +73,33 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         llContenedor = findViewById(R.id.llContenedor);
+        btnCheckOut = findViewById(R.id.btnCheckOut);
 
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         idEvent = parametros.getString("idEvent");
 
+
         Log.w("idEvent", idEvent);
         url = url + idEvent;
         //mostrar datos
 
-        cargarFormulario();
+        if(compruebaConexion(this)) {
 
-        btnCheckOut = findViewById(R.id.btnCheckOut);
+            cargarFormulario();
+
+        } else {
+
+            msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
+            msj.setGravity(Gravity.CENTER, 0, 0);
+            msj.show();
+            btnCheckOut.setVisibility(View.GONE);
+
+        }
+
+
+
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -376,7 +395,9 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
     public void createSwitch(String description, String valor) {
 
+        Log.w("valor", valor);
         boolean variable = Boolean.parseBoolean (valor);
+        Log.w("bolean", "" + variable);
         Switch s = new Switch(this);
         s.setText(description);
         s.setTextColor(getResources().getColor(R.color.colorBlack));
@@ -417,6 +438,25 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         textViews.add(textView);
         llContenedor.addView(textView);
 
+    }
+
+    public static boolean compruebaConexion(Context context) {
+
+        boolean connected = false;
+
+        ConnectivityManager connec = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Recupera todas las redes (tanto móviles como wifi)
+        NetworkInfo[] redes = connec.getAllNetworkInfo();
+
+        for (int i = 0; i < redes.length; i++) {
+            // Si alguna red tiene conexión, se devuelve true
+            if (redes[i].getState() == NetworkInfo.State.CONNECTED) {
+                connected = true;
+            }
+        }
+        return connected;
     }
 
     @Override

@@ -100,8 +100,6 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
                 ir.putExtra("userName", userName);
                 ir.putExtra("idForm", id_form);
                 startActivity(ir);
-                finish();
-
 
             }
         });

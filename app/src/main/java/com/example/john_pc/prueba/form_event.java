@@ -108,12 +108,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     private final String camara_raiz = "misImagenesSistema/";
     private final String ruta_imagen = camara_raiz + "misFotos";
-    String path;
+
 
     String url = "https://test.portcolon2000.site/api/parFormFields/";
     String url2 = "https://test.portcolon2000.site/api/saveEvent";
-    String urlParametros = "https://test.portcolon2000.site/api/parGeneral/";
-    String urlParametros2;
+
     Intent ir;
     Toast msj;
     ArrayList<EditText> editTexts = new ArrayList<EditText>();
@@ -127,10 +126,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<TextView> textViewsHour = new ArrayList<TextView>();
     ArrayList<TextView> textViewsFiles = new ArrayList<TextView>();
     ArrayList<String> stringsRegEx = new ArrayList<String>();
-    Bitmap bit;
-    Uri output;
+
     Bitmap bmp;
-    Base64 imgBase64;
     JSONObject jsonenvio = new JSONObject();
     String textDate = "Haga clic para obtener la Fecha";
     String textHour = "Haga clic para obtener la Hora";
@@ -471,7 +468,25 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 if (validar == 0) {
 
-                    enviarformulario();
+                    if(compruebaConexion(form_event.this)) {
+
+                        enviarformulario();
+
+                    } else {
+
+                        try {
+                            Log.w("conexion", "no hay red");
+                            bd conexion = new bd(form_event.this);
+                            conexion.abrir();
+                            String answer = createAnswerJson(jsonenvio);
+                            conexion.createAnswers(userName, auth, answer);
+                            conexion.cerrar();
+                            finish();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
 
                 } else {
 
@@ -838,7 +853,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         s.setTextOn("Si");
         s.setTextOff("No");
         s.setChecked(true);
-
+        s.setOnClickListener(this);
         Log.w("Switch", "su id es  " + s.getId());
 
         llContenedor.addView(s);
@@ -926,10 +941,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 /*msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();*/
                 mProgressDialog.dismiss();
-                ir = new Intent(form_event.this, events.class);
-                ir.putExtra("auth", auth);
-                ir.putExtra("userName", userName);
-                startActivity(ir);
                 finish();
 
             }
@@ -957,6 +968,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View v) {
 
@@ -1019,6 +1031,29 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             if(textView.getId() == opcion) {
 
                 uploadFile = true;
+
+            }
+
+        }
+
+        for (Iterator iterator = switches.iterator(); iterator
+                .hasNext();) {
+
+            Switch s = (Switch) iterator.next();
+
+            if(s.getId() == opcion) {
+
+                if(s.isChecked()) {
+
+                    s.getThumbDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
+                    s.getTrackDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
+
+                }else {
+
+                    s.getThumbDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
+                    s.getTrackDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
+
+                }
 
             }
 
@@ -1388,17 +1423,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    @Override
-    public void onBackPressed(){
-
-        ir = new Intent(form_event.this, forms.class);
-        ir.putExtra("auth", auth);
-        ir.putExtra("userName", userName);
-        startActivity(ir);
-        finish();
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void cargarFormularioOffline() {
 
@@ -1629,6 +1653,41 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         }
 
         return jsonevents;
+    }
+
+    public String createAnswerJson(JSONObject jsonArray) {
+
+        String path = null;
+        String carpeta = "geoport";
+        File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
+        boolean isCreada = fileJson.exists();
+        String nombreJson = "";
+
+        if(isCreada == false) {
+
+            isCreada = fileJson.mkdir();
+
+        }
+
+        if(isCreada == true) {
+
+            nombreJson = "Answer" + fecha_1+".json";
+
+        }
+
+        path = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nombreJson;
+
+
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.write(String.valueOf(jsonArray));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return path;
+
     }
 
 }

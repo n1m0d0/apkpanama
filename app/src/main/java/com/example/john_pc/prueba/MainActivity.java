@@ -33,6 +33,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -42,6 +43,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -69,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     String credentials;
     String auth;
     int code;
+    String direccion = "https://test.portcolon2000.site/api/saveEvent";
+    String certificado = "";
+    String idOffline;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -86,9 +95,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         validarPermisos();
 
+        if(compruebaConexion(this)) {
+
+            enviarFormularios();
+
+        }
+
     }
-
-
 
     public void logo(View v) {
 
@@ -429,6 +442,103 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         });
         builder.show();
 
+    }
+
+    private void enviarFormularios(){
+
+        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+
+        try {
+            final bd conexion = new bd(this);
+            conexion.abrir();
+            final Cursor offline = conexion.searchActive();
+            if (!offline.moveToFirst() == false) {
+
+                for (offline.moveToFirst(); !offline.isAfterLast(); offline.moveToNext()) {
+
+                    mRequestQueue = Volley.newRequestQueue(this);
+
+                    idOffline = offline.getString(0);
+                    String jsonAnswers = offline.getString(1);
+                    String user = offline.getString(2);
+                    certificado = offline.getString(3);
+
+                    Log.w("data", certificado + " " + idOffline);
+
+                    String dataJson = readJsonFileAnswer(jsonAnswers);
+
+                    JSONObject respuesta = new JSONObject(dataJson);
+
+                    Log.w("data", " " + respuesta);
+
+                    mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, direccion, respuesta, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            Log.w("mio", "" + response);
+
+                            //conexion.updateAnswers(idOffline);
+
+                        }
+
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Log.w("mioerror", "" + error);
+
+                        }
+                    }){
+
+                        @Override
+                        public Map getHeaders() throws AuthFailureError {
+                            HashMap headers = new HashMap();
+                            headers.put("Authorization", certificado); //authentication
+                            return headers;
+                        }
+
+                    };
+
+                    mRequestQueue.add(mJsonObjectRequest);
+
+                }
+                conexion.cerrar();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mProgressDialog.dismiss();
+        }
+
+        mProgressDialog.dismiss();
+
+    }
+
+    public String readJsonFileAnswer (String path) {
+
+        Log.w("ver", path);
+
+        String jsonAnswer = null;
+
+        String json = null;
+        try {
+            File f = new File(path);
+            BufferedReader fin =
+                    new BufferedReader(
+                            new InputStreamReader(
+                                    new FileInputStream(f)));
+
+            jsonAnswer = fin.readLine();
+            fin.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        return jsonAnswer;
     }
 
 }

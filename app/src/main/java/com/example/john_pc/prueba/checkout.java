@@ -817,7 +817,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         s.setTextOn("Si");
         s.setTextOff("No");
         s.setChecked(true);
-
+        s.setOnClickListener(this);
         Log.w("Switch", "su id es  " + s.getId());
 
         llContenedor.addView(s);
@@ -904,11 +904,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                 Log.w("mio", "" + response);
                 /*msj = Toast.makeText(checkout.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();*/
-                mProgressDialog.dismiss();
                 ir = new Intent(checkout.this, events.class);
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 startActivity(ir);
+                mProgressDialog.dismiss();
                 finish();
 
             }
@@ -936,6 +936,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View v) {
 
@@ -998,6 +999,29 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
             if(textView.getId() == opcion) {
 
                 uploadFile = true;
+
+            }
+
+        }
+
+        for (Iterator iterator = switches.iterator(); iterator
+                .hasNext();) {
+
+            Switch s = (Switch) iterator.next();
+
+            if(s.getId() == opcion) {
+
+                if(s.isChecked()) {
+
+                    s.getThumbDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
+                    s.getTrackDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
+
+                }else {
+
+                    s.getThumbDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
+                    s.getTrackDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
+
+                }
 
             }
 

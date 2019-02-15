@@ -14,32 +14,20 @@ public class bd {
     private static final String idUser = "_id";
     private static final String nameUser = "nameUser";
     private static final String codeUser = "codeUser";
-
-    // TABLA DE FORMULARIOS
-    private static final String idForm = "_id";
-    private static final String formJson = "formJson";
-
-    // TABLA EVENTO
-    private static final String idEvent = "_id";
-    private static final String eventJson = "eventJson";
-
     // TABLA REGISTRO
-    private static final String idReg = "_id";
-    private static final String regJson = "regJson";
+    private static final String idAnswers= "_id";
+    private static final String nameUserAnswers = "nameUserAnswers";
+    private static final String certificateAnswers = "certificateAnswers";
+    private static final String answersJson = "answersJson";
+    private static final String stateAnswers = "stateAnswers";
+    // TABLA SESEION
 
-    // TABLA DE LISTA DE EVENTOS
-    // TABLA EVENTO
-    private static final String idListEvents = "_id";
-    private static final String listEventsJson = "path";
 
     // BASE DE DATOS TABLAS
     private static final String BD = "BD_GEO";
     private static final String user = "user";
-    private static final String form = "form";
-    private static final String event = "event";
-    private static final String listEvents = "listEvents";
-    private static final String  reg = "reg";
-    private static final int VERSION_BD = 10;
+    private static final String  answers = "answers";
+    private static final int VERSION_BD = 12;
 
     private BDHelper nHelper;
     private final Context nContexto;
@@ -60,22 +48,11 @@ public class bd {
                     + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + nameUser
                     + " TEXT NOT NULL, " + codeUser + " TEXT NOT NULL);");
 
-            db.execSQL("CREATE TABLE " + form + "(" + idForm
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + formJson
-                    + " TEXT NOT NULL);");
-
-            db.execSQL("CREATE TABLE " + event + "(" + idEvent
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + eventJson
-                    + " TEXT NOT NULL);");
-
-            db.execSQL("CREATE TABLE " + reg + "(" + idReg
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + regJson
-                    + " TEXT NOT NULL);");
-
-            db.execSQL("CREATE TABLE " + listEvents + "(" + idListEvents
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + listEventsJson
-                    + " TEXT NOT NULL);");
-
+            db.execSQL("CREATE TABLE " + answers + "(" + idAnswers
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + answersJson
+                    + " TEXT NOT NULL, " + nameUserAnswers
+                    + " TEXT NOT NULL, " + certificateAnswers
+                    + " TEXT NOT NULL, "  + stateAnswers + " TEXT NOT NULL);");
 
         }
 
@@ -86,18 +63,8 @@ public class bd {
             db.execSQL("DROP TABLE IF EXISTS " + user);
             onCreate(db);
 
-            db.execSQL("DROP TABLE IF EXISTS " + form);
+            db.execSQL("DROP TABLE IF EXISTS " + answers);
             onCreate(db);
-
-            db.execSQL("DROP TABLE IF EXISTS " + event);
-            onCreate(db);
-
-            db.execSQL("DROP TABLE IF EXISTS " + reg);
-            onCreate(db);
-
-            db.execSQL("DROP TABLE IF EXISTS " + listEvents);
-            onCreate(db);
-
         }
 
     }
@@ -163,46 +130,38 @@ public class bd {
 
     }
 
-    //listEvents
-    public String  searchListEvents(long id) throws SQLException {
-
-        String events = null;
-        String selectQuery = "SELECT * FROM " + listEvents + " WHERE "
-                + this.idListEvents + "='" + id + "'";
-        Log.w("query", selectQuery);
-
-        try {
-
-            Cursor cursor = nBD.rawQuery(selectQuery, null);
-            cursor.moveToFirst();
-            events = cursor.getString(1);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-
-        return events;
-    }
-
-    public long createListEvents(String path)
+    //Answers
+    public long createAnswers(String name, String auth, String path)
             throws SQLException {
         // TODO Auto-generated method stub
 
+        String state = "ACTIVO";
         ContentValues cv = new ContentValues();
-        cv.put(listEventsJson, path);
-
-        return nBD.insert(listEvents, null, cv);
+        cv.put(nameUserAnswers, name);
+        cv.put(certificateAnswers, auth);
+        cv.put(answersJson, path);
+        cv.put(stateAnswers, state);
+        return nBD.insert(answers, null, cv);
 
     }
 
-    public void updateListEvents(int id, String listEventsJson) throws SQLException {
+    public Cursor searchActive() throws SQLException {
+
+        String selectQuery = "SELECT * FROM " + answers + " WHERE " + stateAnswers
+                + " = 'ACTIVO'";
+        Cursor cursor = nBD.rawQuery(selectQuery, null);
+        return cursor;
+
+    }
+
+    public void updateAnswers(String id)
+            throws SQLException {
         // TODO Auto-generated method stub
 
+        String state = "DESACTIVADO";
         ContentValues cv = new ContentValues();
-        cv.put(this.listEventsJson, listEventsJson);
-        nBD.update(listEvents, cv, this.idListEvents + "='" + id + "'", null);
+        cv.put(stateAnswers, state);
+        nBD.update(answers, cv, idAnswers + "='" + id + "'", null);
 
     }
 
