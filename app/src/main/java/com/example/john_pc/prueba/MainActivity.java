@@ -481,6 +481,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                             Log.w("mio", "" + response);
 
                             //conexion.updateAnswers(idOffline);
+                            bd conexion2 = new bd(MainActivity.this);
+                            try {
+                                conexion2.abrir();
+                                conexion2.updateMyAnswers(idOffline);
+                                conexion2.cerrar();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
                         }
 

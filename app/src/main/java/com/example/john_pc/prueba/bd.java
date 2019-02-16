@@ -26,7 +26,7 @@ public class bd {
     // BASE DE DATOS TABLAS
     private static final String BD = "BD_GEO";
     private static final String user = "user";
-    private static final String  answers = "answers";
+    private static final String answers = "answers";
     private static final int VERSION_BD = 12;
 
     private BDHelper nHelper;
@@ -154,14 +154,12 @@ public class bd {
 
     }
 
-    public void updateAnswers(String id)
-            throws SQLException {
-        // TODO Auto-generated method stub
+    public void updateMyAnswers(String id) throws SQLException {
 
         String state = "DESACTIVADO";
         ContentValues cv = new ContentValues();
         cv.put(stateAnswers, state);
-        nBD.update(answers, cv, idAnswers + "='" + id + "'", null);
+        nBD.update(answers, cv, idAnswers + " = '" + id + "'", null);
 
     }
 
