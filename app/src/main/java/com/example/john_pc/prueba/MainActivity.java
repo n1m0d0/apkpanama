@@ -95,6 +95,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         validarPermisos();
 
+        try {
+            verificarSesion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if(compruebaConexion(this)) {
 
             enviarFormularios();
@@ -164,13 +170,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
                                 } else {
 
+                                    conexion.createSession(etUser.getText().toString().trim());
                                     ir = new Intent(this, events.class);
                                     ir.putExtra("auth", auth);
                                     ir.putExtra("userName", etUser.getText().toString().trim());
                                     startActivity(ir);
-                                    conexion.cerrar();
 
                                 }
+                                conexion.cerrar();
 
                             } catch (Exception e) {
 
@@ -262,11 +269,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                 if (usuario.moveToFirst() == false) {
 
                     conexion.createUser(etUser.getText().toString().trim(), auth);
+                    conexion.createSession(etUser.getText().toString().trim());
 
                 }
                 else {
+
                     conexion.updateUser(etUser.getText().toString().trim(), auth);
+                    conexion.createSession(etUser.getText().toString().trim());
+
                 }
+
                 conexion.cerrar();
 
             } catch (Exception e) {
@@ -547,6 +559,26 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         }
 
         return jsonAnswer;
+    }
+
+    public void verificarSesion() throws Exception {
+
+        bd conexion = new bd(this);
+        conexion.abrir();
+        Cursor cursor = conexion.searchSessionActive();
+        if (cursor.moveToFirst() != false) {
+
+            Log.w("name", cursor.getString(1));
+            Cursor cursor2 = conexion.searchUser(cursor.getString(1));
+            cursor2.moveToFirst();
+            Log.w("tag", cursor2.getString(1));
+            ir = new Intent(this, events.class);
+            ir.putExtra("auth", cursor2.getString(2));
+            ir.putExtra("userName", cursor2.getString(1));
+            startActivity(ir);
+
+        }
+
     }
 
 }

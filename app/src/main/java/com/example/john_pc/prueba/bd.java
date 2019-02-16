@@ -21,13 +21,16 @@ public class bd {
     private static final String answersJson = "answersJson";
     private static final String stateAnswers = "stateAnswers";
     // TABLA SESEION
-
+    private static final String idSession = "_id";
+    private static final String nameUserSession = "nameUserSession";
+    private static final String stateSession = "stateSession";
 
     // BASE DE DATOS TABLAS
     private static final String BD = "BD_GEO";
     private static final String user = "user";
     private static final String answers = "answers";
-    private static final int VERSION_BD = 12;
+    private static final String mysession = "mysession";
+    private static final int VERSION_BD = 13;
 
     private BDHelper nHelper;
     private final Context nContexto;
@@ -53,6 +56,10 @@ public class bd {
                     + " TEXT NOT NULL, " + nameUserAnswers
                     + " TEXT NOT NULL, " + certificateAnswers
                     + " TEXT NOT NULL, "  + stateAnswers + " TEXT NOT NULL);");
+
+            db.execSQL("CREATE TABLE " + mysession + "(" + idSession
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + nameUserSession
+                    + " TEXT NOT NULL, " + stateSession + " TEXT NOT NULL);");
 
         }
 
@@ -160,6 +167,28 @@ public class bd {
         ContentValues cv = new ContentValues();
         cv.put(stateAnswers, state);
         nBD.update(answers, cv, idAnswers + " = '" + id + "'", null);
+
+    }
+
+    public long createSession(String name)
+            throws SQLException {
+        // TODO Auto-generated method stub
+
+        String state = "ACTIVO";
+
+        ContentValues cv = new ContentValues();
+        cv.put(nameUserSession, name);
+        cv.put(stateSession, state);
+        return nBD.insert(mysession, null, cv);
+
+    }
+
+    public Cursor searchSessionActive() throws SQLException {
+
+        String selectQuery = "SELECT * FROM " + mysession + " WHERE " + stateSession
+                + " = 'ACTIVO'";
+        Cursor cursor = nBD.rawQuery(selectQuery, null);
+        return cursor;
 
     }
 
