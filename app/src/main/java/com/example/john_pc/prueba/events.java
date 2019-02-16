@@ -15,6 +15,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -27,6 +29,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -71,6 +74,10 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     String colorForm;
     String idIconForm;
     adapter_events adapter;
+    String direccion = "https://test.portcolon2000.site/api/saveEvent";
+    String certificado = "";
+    String idOffline;
+    JsonObjectRequest mJsonObjectRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +164,46 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menusesion, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.closeSession:
+
+                try {
+                    cerrarSesion();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return true;
+            case R.id.sincronizar:
+
+                if(compruebaConexion(this)) {
+
+                    enviarFormularios();
+
+                } else {
+
+                    msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
+                    msj.setGravity(Gravity.CENTER, 0, 0);
+                    msj.show();
+
+                }
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void cargarEventos(){
@@ -389,6 +436,121 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         }
 
         return jsonevents;
+    }
+
+    public void cerrarSesion() throws Exception {
+
+        bd conexion = new bd(this);
+        conexion.abrir();
+        conexion.updateSession(userName);
+        conexion.cerrar();
+        finish();
+
+    }
+
+    private void enviarFormularios(){
+
+        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+
+        try {
+            final bd conexion = new bd(this);
+            conexion.abrir();
+            final Cursor offline = conexion.searchActive();
+            if (!offline.moveToFirst() == false) {
+
+                for (offline.moveToFirst(); !offline.isAfterLast(); offline.moveToNext()) {
+
+                    mRequestQueue = Volley.newRequestQueue(this);
+
+                    idOffline = offline.getString(0);
+                    String jsonAnswers = offline.getString(1);
+                    String user = offline.getString(2);
+                    certificado = offline.getString(3);
+
+                    Log.w("data", certificado + " " + idOffline);
+
+                    String dataJson = readJsonFileAnswer(jsonAnswers);
+
+                    JSONObject respuesta = new JSONObject(dataJson);
+
+                    Log.w("data", " " + respuesta);
+
+                    mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, direccion, respuesta, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            Log.w("mio", "" + response);
+
+                            //conexion.updateAnswers(idOffline);
+                            bd conexion2 = new bd(events.this);
+                            try {
+                                conexion2.abrir();
+                                conexion2.updateMyAnswers(idOffline);
+                                conexion2.cerrar();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Log.w("mioerror", "" + error);
+
+                        }
+                    }){
+
+                        @Override
+                        public Map getHeaders() throws AuthFailureError {
+                            HashMap headers = new HashMap();
+                            headers.put("Authorization", certificado); //authentication
+                            return headers;
+                        }
+
+                    };
+
+                    mRequestQueue.add(mJsonObjectRequest);
+
+                }
+                conexion.cerrar();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mProgressDialog.dismiss();
+        }
+
+        mProgressDialog.dismiss();
+
+    }
+
+    public String readJsonFileAnswer (String path) {
+
+        Log.w("ver", path);
+
+        String jsonAnswer = null;
+
+        String json = null;
+        try {
+            File f = new File(path);
+            BufferedReader fin =
+                    new BufferedReader(
+                            new InputStreamReader(
+                                    new FileInputStream(f)));
+
+            jsonAnswer = fin.readLine();
+            fin.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        return jsonAnswer;
     }
 
 }

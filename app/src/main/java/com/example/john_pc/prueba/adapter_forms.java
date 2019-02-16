@@ -76,7 +76,7 @@ public class adapter_forms extends BaseAdapter {
         sd.setIntrinsicWidth(100);
         sd.getPaint().setColor(Color.parseColor(item.colorForm));
         ivImage.setBackground(sd);
-        ivImage.setPadding(70, 70, 70, 70);
+        ivImage.setPadding(50, 50, 50, 50);
         ivImage.setImageBitmap(decodedImage);
 
         return vi;

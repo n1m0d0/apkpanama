@@ -192,4 +192,15 @@ public class bd {
 
     }
 
+    public void updateSession(String name) throws SQLException {
+        // TODO Auto-generated method stub
+
+        String state = "DESACTIVADO";
+
+        ContentValues cv = new ContentValues();
+        cv.put(stateSession, state);
+        nBD.update(mysession, cv, nameUserSession + "='" + name + "'", null);
+
+    }
+
 }
