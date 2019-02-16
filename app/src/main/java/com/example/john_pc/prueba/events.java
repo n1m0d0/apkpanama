@@ -110,7 +110,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 tvPending.setText(listText);
             } else {
                 int cantidad = cursor.getCount();
-                tvPending.setText(listText + "           Eventos sin enviar: " + cantidad);
+                tvPending.setText(listText + "           " + cantidad + "Pendiente(s)");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,7 +118,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         if(compruebaConexion(this)) {
 
-            cargarEventos();
+            //cargarEventos();
+            enviarFormularios();
 
         } else {
 
@@ -540,6 +541,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                 }
                 conexion.cerrar();
+                tvPending.setText(listText);
                 cargarEventos();
 
             }
