@@ -5,6 +5,6 @@
         android:title="Sincronizar datos"/>
 
     <item  android:id="@+id/closeSession"
-        android:title="Cerrar Session"/>
+        android:title="Cerrar sesion"/>
 
 </menu>

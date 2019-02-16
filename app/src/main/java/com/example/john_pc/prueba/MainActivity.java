@@ -576,6 +576,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             ir.putExtra("auth", cursor2.getString(2));
             ir.putExtra("userName", cursor2.getString(1));
             startActivity(ir);
+            finish();
 
         }
 

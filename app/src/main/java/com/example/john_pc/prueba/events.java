@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -49,6 +50,7 @@ import java.util.Map;
 
 public class events extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
 
+    TextView tvPending;
     EditText etSearch;
     ListView lvEvents;
     FloatingActionButton fbAdd;
@@ -79,6 +81,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     String idOffline;
     JsonObjectRequest mJsonObjectRequest;
 
+    String listText = "Sucesos registrados";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -86,17 +90,31 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         setContentView(R.layout.activity_events);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        tvPending = findViewById(R.id.tvPending);
         lvEvents = findViewById(R.id.lvEvents);
         fbAdd = findViewById(R.id.fbAdd);
         etSearch = findViewById(R.id.etSearch);
+
 
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
 
         //funcionn para llenar el array de itemEvents y mostrarlo en el ListView
-        /*msj = Toast.makeText(this, auth + " " + userName, Toast.LENGTH_LONG);
-        msj.show();*/
+
+        bd verifica =  new bd(this);
+        try {
+            verifica.abrir();
+            Cursor cursor = verifica.searchActive();
+            if (cursor.moveToFirst() == false) {
+                tvPending.setText(listText);
+            } else {
+                int cantidad = cursor.getCount();
+                tvPending.setText(listText + "           Eventos sin enviar: " + cantidad);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if(compruebaConexion(this)) {
 
@@ -180,7 +198,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             case R.id.closeSession:
 
                 try {
+
                     cerrarSesion();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -191,6 +211,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 if(compruebaConexion(this)) {
 
                     enviarFormularios();
+
+                    cargarEventos();
 
                 } else {
 
@@ -444,6 +466,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         conexion.abrir();
         conexion.updateSession(userName);
         conexion.cerrar();
+        ir = new Intent(this, MainActivity.class);
+        startActivity(ir);
         finish();
 
     }
