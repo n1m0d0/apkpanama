@@ -414,6 +414,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     File file = new File(textView.getText().toString().trim());
 
+                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+
+                    Log.w("tamaño", "" + file_size);
+
                     String[] parts = textView.getText().toString().trim().split("/");
                     String nombre = parts[parts.length - 1];
 

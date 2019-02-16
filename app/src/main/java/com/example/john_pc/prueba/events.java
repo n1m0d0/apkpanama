@@ -212,8 +212,6 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                     enviarFormularios();
 
-                    cargarEventos();
-
                 } else {
 
                     msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
@@ -542,6 +540,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                 }
                 conexion.cerrar();
+                cargarEventos();
 
             }
         } catch (Exception e) {
