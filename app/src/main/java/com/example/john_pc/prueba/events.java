@@ -121,6 +121,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             //cargarEventos();
             enviarFormularios();
 
+            cargarEventos();
+
         } else {
 
             cargarEventosOffline();
@@ -212,6 +214,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 if(compruebaConexion(this)) {
 
                     enviarFormularios();
+
+
+                    cargarEventos();
 
                 } else {
 
@@ -542,7 +547,6 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 }
                 conexion.cerrar();
                 tvPending.setText(listText);
-                cargarEventos();
 
             }
         } catch (Exception e) {
