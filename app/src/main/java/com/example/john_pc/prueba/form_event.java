@@ -399,7 +399,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         .hasNext();) {
 
                     TextView textView = (TextView) iterator.next();
-
+                    textView.setTextColor(Color.BLACK);
                     String obs_respuesta = textView.getText().toString().trim();
                     String control = textView.getHint().toString().trim();
 
@@ -416,7 +416,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
 
-                    Log.w("tamaño", "" + file_size);
+                    Log.w("min", "" + file_size);
+
+                    if (file_size > 2000) {
+
+                        validar++;
+                        textView.setTextColor(Color.RED);
+
+                    }
 
                     String[] parts = textView.getText().toString().trim().split("/");
                     String nombre = parts[parts.length - 1];
