@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -121,7 +122,13 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             //cargarEventos();
             enviarFormularios();
 
-            cargarEventos();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    cargarEventos();
+                }
+            }, 2000);
 
         } else {
 
@@ -215,8 +222,13 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                     enviarFormularios();
 
-
-                    cargarEventos();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            cargarEventos();
+                        }
+                    }, 2000);
 
                 } else {
 
