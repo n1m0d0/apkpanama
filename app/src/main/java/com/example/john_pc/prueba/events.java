@@ -221,6 +221,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                         @Override
                         public void run() {
                             mProgressDialog.dismiss();
+                            itemEvents.clear();
                             cargarEventos();
                         }
                     }, 2000);
