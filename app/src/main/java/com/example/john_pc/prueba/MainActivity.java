@@ -101,11 +101,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             e.printStackTrace();
         }
 
-        /*if(compruebaConexion(this)) {
+        if(compruebaConexion(this)) {
 
             enviarFormularios();
 
-        }*/
+        }
 
     }
 

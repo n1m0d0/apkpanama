@@ -119,16 +119,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         if(compruebaConexion(this)) {
 
-            //cargarEventos();
-            enviarFormularios();
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    cargarEventos();
-                }
-            }, 2000);
+            cargarEventos();
 
         } else {
 
@@ -223,9 +214,13 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                     enviarFormularios();
 
                     Handler handler = new Handler();
+                    mProgressDialog =  new ProgressDialog(this);
+                    mProgressDialog.setMessage("Cargando...");
+                    mProgressDialog.show();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            mProgressDialog.dismiss();
                             cargarEventos();
                         }
                     }, 2000);
