@@ -1,4 +1,4 @@
-package com.example.john_pc.prueba;
+package gesport.xpertise.com.gesportapk;
 
 
 import android.Manifest;
@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -33,7 +32,6 @@ import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -59,6 +57,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.john_pc.prueba.R;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
@@ -401,6 +400,17 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                     }
 
                     File file = new File(textView.getText().toString().trim());
+
+                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+
+                    Log.w("min", "" + file_size);
+
+                    if (file_size > 2000) {
+
+                        validar++;
+                        textView.setTextColor(Color.RED);
+
+                    }
 
                     String[] parts = textView.getText().toString().trim().split("/");
                     String nombre = parts[parts.length - 1];

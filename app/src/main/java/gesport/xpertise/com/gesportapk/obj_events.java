@@ -1,4 +1,4 @@
-package com.example.john_pc.prueba;
+package gesport.xpertise.com.gesportapk;
 
 public class obj_events {
 

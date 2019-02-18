@@ -1,4 +1,4 @@
-package com.example.john_pc.prueba;
+package gesport.xpertise.com.gesportapk;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

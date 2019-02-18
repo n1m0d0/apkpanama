@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view_event">
+    tools:context="gesport.xpertise.com.gesportapk.view_event">
 
     <ScrollView
         android:layout_width="match_parent"
