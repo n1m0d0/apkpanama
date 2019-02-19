@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.john_pc.prueba.R;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;

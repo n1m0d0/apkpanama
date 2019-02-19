@@ -57,7 +57,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.john_pc.prueba.R;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
@@ -386,7 +385,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                         .hasNext();) {
 
                     TextView textView = (TextView) iterator.next();
-
+                    textView.setTextColor(Color.BLACK);
                     String obs_respuesta = textView.getText().toString().trim();
                     String control = textView.getHint().toString().trim();
 
