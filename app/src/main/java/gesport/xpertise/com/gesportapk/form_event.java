@@ -597,7 +597,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 3:
 
                                 creartextview(description);
-                                createSpinner(idField, itemp);
+                                createSpinner(idField, itemp, input_max);
 
 
                                 break;
@@ -633,7 +633,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 8:
 
                                 creartextview(description);
-                                createSpinner(idField, itemp);
+                                createSpinner(idField, itemp, input_max);
 
                                 break;
 
@@ -885,7 +885,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // crear un spinner en el contenedor
 
-    public void createSpinner(int idField, ArrayList<obj_params> aux){
+    public void createSpinner(int idField, ArrayList<obj_params> aux, int idParametro){
 
         Spinner sp = new Spinner(this);
         sp.setId(idField);
@@ -893,6 +893,16 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         sp.setAdapter(adapter);
         spinners.add(sp);
         llContenedor.addView(sp);
+        int posicion = 0;
+        for (int i = 0; i < sp.getCount(); i++) {
+
+            obj_params elegido = (obj_params) sp.getItemAtPosition(i);
+            if (elegido.getId() == idParametro) {
+                posicion = i;
+            }
+        }
+        sp.setSelection(posicion);
+
     }
 
     // Crear imageview en el contenedor
@@ -1510,7 +1520,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 3:
 
                                 creartextview(description);
-                                createSpinner(idField, itemp);
+                                createSpinner(idField, itemp, input_max);
 
 
                                 break;
@@ -1546,7 +1556,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 8:
 
                                 creartextview(description);
-                                createSpinner(idField, itemp);
+                                createSpinner(idField, itemp, input_max);
 
                                 break;
 
