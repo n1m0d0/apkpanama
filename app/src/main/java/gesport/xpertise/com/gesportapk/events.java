@@ -234,6 +234,17 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 }
 
                 return true;
+
+            case R.id.info:
+
+                ir = new Intent(events.this, Info.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                startActivity(ir);
+                finish();
+
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

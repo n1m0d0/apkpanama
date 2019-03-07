@@ -4,6 +4,9 @@
     <item  android:id="@+id/sincronizar"
         android:title="Sincronizar datos"/>
 
+    <item  android:id="@+id/info"
+        android:title="Informacion"/>
+
     <item  android:id="@+id/closeSession"
         android:title="Cerrar sesion"/>
 

@@ -36,6 +36,7 @@
         <activity android:name="gesport.xpertise.com.gesportapk.view_event" />
         <activity android:name="gesport.xpertise.com.gesportapk.checkout" />
         <activity android:name="gesport.xpertise.com.gesportapk.forms"></activity>
+        <activity android:name="gesport.xpertise.com.gesportapk.Info"></activity>
     </application>
 
 </manifest>
