@@ -4,6 +4,7 @@ package gesport.xpertise.com.gesportapk;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -14,11 +15,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -33,6 +38,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -67,6 +73,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,7 +87,7 @@ import java.util.regex.Pattern;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class checkout extends AppCompatActivity implements View.OnClickListener {
+public class checkout extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnCompletionListener {
 
     int idField;
     int opcion;
@@ -118,6 +125,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     ArrayList<TextView> textViewsHour = new ArrayList<TextView>();
     ArrayList<TextView> textViewsFiles = new ArrayList<TextView>();
     ArrayList<String> stringsRegEx = new ArrayList<String>();
+    ArrayList<TextView> textViewsAudio = new ArrayList<TextView>();
+
     Bitmap bit;
     Uri output;
     Bitmap bmp;
@@ -126,6 +135,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     String textDate = "Haga clic para obtener la Fecha";
     String textHour = "Haga clic para obtener la Hora";
     String textFile = "Haga clic para obtener el Archivo";
+    String textAudio = "Haga clic para grabar el audio";
     String textImage = "Imagen";
     String obligatorio = "obligatorio";
 
@@ -133,6 +143,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
     String fecha_2;
     String fecha_1;
     String mLocation = "-1";
+
+
+    MediaRecorder recorder;
+    MediaPlayer player;
+    String pathAudio = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -447,6 +462,74 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
                 }
 
+                /****************************************/
+                for (Iterator iterator = textViewsAudio.iterator(); iterator
+                        .hasNext();) {
+
+                    TextView textView = (TextView) iterator.next();
+                    textView.setTextColor(Color.BLACK);
+                    String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
+
+                    Log.w("controlTextViewFiles", control);
+
+                    if (obs_respuesta.equals(textAudio) && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaTextViewFiles", "" + validar);
+
+                    }
+
+                    File file = new File(textView.getText().toString().trim());
+
+                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+
+                    Log.w("min", "" + file_size);
+
+                    if (file_size > 2000) {
+
+                        validar++;
+                        textView.setTextColor(Color.RED);
+
+                    }
+
+                    String[] parts = textView.getText().toString().trim().split("/");
+                    String nombre = parts[parts.length - 1];
+
+                    byte[] fileArray = new byte[(int) file.length()];
+                    InputStream inputStream;
+
+                    String encodedFile = "";
+                    try {
+                        inputStream = new FileInputStream(file);
+                        inputStream.read(fileArray);
+                        encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
+                    } catch (Exception e) {
+                        // Manejar Error
+                    }
+
+                    if (obs_respuesta.equals(textFile)) {
+
+                        encodedFile = "";
+
+                    }
+
+                    Log.w("File", "files" + " " + textView.getId() + "nombre" + nombre);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", nombre);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encodedFile);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                /****************************************/
+
                 localizar();
 
                 //Log.w("json", "" + respuesta);
@@ -611,6 +694,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
                             case 10:
 
                                 createtextViewTitle(description);
+
+                                break;
+
+                            case 11:
+
+                                creartextview(description);
+                                createTextviewAudio(idField,is_mandatory);
 
                                 break;
 
@@ -900,6 +990,20 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
+    public void createTextviewAudio(int idField, String option) {
+
+        TextView textView = new TextView(this);
+        textView.setId(idField);
+        textView.setTextSize(14);
+        textView.setText(textAudio);
+        textView.setHint(option);
+        textView.setOnClickListener(this);
+
+        llContenedor.addView(textView);
+        textViewsAudio.add(textView);
+
+    }
+
     private void enviarformulario(){
 
         Log.w("url", url2);
@@ -966,6 +1070,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
         boolean usarCamara = false;
         boolean date = false;
         boolean uploadFile = false;
+        boolean recordingAudio = false;
 
         for(Iterator iterator = imageViews.iterator(); iterator
                 .hasNext();) {
@@ -1022,6 +1127,21 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         }
 
+        /*****************************/
+        for (Iterator iterator = textViewsAudio.iterator(); iterator
+                .hasNext();) {
+
+            TextView textView = (TextView) iterator.next();
+
+            if(textView.getId() == opcion) {
+
+                recordingAudio = true;
+
+            }
+
+        }
+        /*****************************/
+
         for (Iterator iterator = switches.iterator(); iterator
                 .hasNext();) {
 
@@ -1063,7 +1183,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
         }
 
+        if (recordingAudio) {
 
+            grabaciondeAudio(opcion, this);
+
+        }
 
     }
 
@@ -1409,6 +1533,111 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
+    public void grabaciondeAudio(final int id, final Context context) {
+
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.recording_dialog);
+
+        final Button btnRecording = dialog.findViewById(R.id.btnRecording);
+        final Button btnPlay = dialog.findViewById(R.id.btnPlay);
+        final Button btnStop = dialog.findViewById(R.id.btnStop);
+        final Button btnSave = dialog.findViewById(R.id.btnSave);
+
+        btnRecording.setEnabled(true);
+        btnPlay.setEnabled(false);
+        btnStop.setEnabled(false);
+        btnSave.setEnabled(false);
+
+
+        String carpeta = "geoport";
+        File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
+        boolean isCreada = fileJson.exists();
+        String nombreJson = "";
+
+        if(isCreada == false) {
+
+            isCreada = fileJson.mkdir();
+
+        }
+
+        if(isCreada == true) {
+
+            nombreJson = "AudioGesport" + fecha_1 +".3gp";
+
+        }
+
+        pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nombreJson;
+
+        btnRecording.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                recorder = new MediaRecorder();
+                recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                recorder.setOutputFile(pathAudio);
+                try {
+                    recorder.prepare();
+                } catch (IOException e) {
+                }
+                recorder.start();
+                btnStop.setEnabled(true);
+
+            }
+        });
+
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                player.start();
+
+            }
+        });
+
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                recorder.stop();
+                recorder.release();
+                player = new MediaPlayer();
+                player.setOnCompletionListener((MediaPlayer.OnCompletionListener) context);
+                try {
+                    player.setDataSource(pathAudio);
+                } catch (IOException e) {
+                }
+                try {
+                    player.prepare();
+                } catch (IOException e) {
+                }
+
+                btnPlay.setEnabled(true);
+                btnSave.setEnabled(true);
+
+            }
+        });
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                TextView textView = new TextView(context);
+                textView = findViewById(id);
+                textView.setText(pathAudio);
+                dialog.dismiss();
+
+            }
+        });
+
+        dialog.show();
+
+    }
+
     @Override
     public void onBackPressed(){
 
@@ -1420,4 +1649,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener 
 
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+
+    }
 }
