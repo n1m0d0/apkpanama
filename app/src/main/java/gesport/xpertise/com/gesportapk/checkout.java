@@ -699,8 +699,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                             case 11:
 
-                                creartextview(description);
-                                createTextviewAudio(idField,is_mandatory);
+                                /*creartextview(description);
+                                createTextviewAudio(idField,is_mandatory);*/
 
                                 break;
 

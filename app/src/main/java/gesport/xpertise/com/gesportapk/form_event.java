@@ -730,8 +730,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 11:
 
-                                creartextview(description);
-                                createTextviewAudio(idField,is_mandatory);
+                                /*creartextview(description);
+                                createTextviewAudio(idField,is_mandatory);*/
 
                                 break;
 
@@ -1694,8 +1694,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 11:
 
-                                creartextview(description);
-                                createTextviewAudio(idField,is_mandatory);
+                                /*creartextview(description);
+                                createTextviewAudio(idField,is_mandatory);*/
 
                                 break;
 
