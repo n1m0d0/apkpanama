@@ -391,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             public void onClick(DialogInterface dialog, int which) {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION}, 100);
+                    requestPermissions(new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, WRITE_EXTERNAL_STORAGE, CAMERA, RECORD_AUDIO}, 100);
                 }
 
             }
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         if(requestCode == 100) {
 
-            if(grantResults.length == 4 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
+            if(grantResults.length == 5 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED  && grantResults[4] == PackageManager.PERMISSION_GRANTED) {
 
 
 
