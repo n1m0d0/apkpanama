@@ -99,8 +99,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String auth;
     String userName;
     String idForm;
-    LinearLayout llContenedor;
+    LinearLayout llContenedor, llRecording;
     Button btnSave;
+    ImageView ivRecording;
+    TextView tvPathRecording;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
@@ -147,6 +149,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     MediaRecorder recorder;
     MediaPlayer player;
     String pathAudio = null;
+    int idAudio;
+    int option = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -157,7 +161,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         llContenedor = findViewById(R.id.llContenedor);
+        llRecording = findViewById(R.id.llRecording);
         btnSave = findViewById(R.id.btnSave);
+        ivRecording = findViewById(R.id.ivRecording);
+        tvPathRecording = findViewById(R.id.tvPathRecording);
+        tvPathRecording.setText(textAudio);
 
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
@@ -470,13 +478,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 }
 
                 /****************************************/
-                for (Iterator iterator = textViewsAudio.iterator(); iterator
-                        .hasNext();) {
 
-                    TextView textView = (TextView) iterator.next();
-                    textView.setTextColor(Color.BLACK);
-                    String obs_respuesta = textView.getText().toString().trim();
-                    String control = textView.getHint().toString().trim();
+
+
+                    tvPathRecording.setTextColor(Color.BLACK);
+                    String obs_respuesta = tvPathRecording.getText().toString().trim();
+                    String control = tvPathRecording.getHint().toString().trim();
 
                     Log.w("controlTextViewFiles", control);
 
@@ -487,7 +494,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     }
 
-                    File file = new File(textView.getText().toString().trim());
+                    File file = new File(tvPathRecording.getText().toString().trim());
 
                     int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
 
@@ -496,11 +503,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     if (file_size > 2000) {
 
                         validar++;
-                        textView.setTextColor(Color.RED);
+                        tvPathRecording.setTextColor(Color.RED);
 
                     }
 
-                    String[] parts = textView.getText().toString().trim().split("/");
+                    String[] parts = tvPathRecording.getText().toString().trim().split("/");
                     String nombre = parts[parts.length - 1];
 
                     byte[] fileArray = new byte[(int) file.length()];
@@ -515,16 +522,15 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         // Manejar Error
                     }
 
-                    if (obs_respuesta.equals(textFile)) {
+                    if (obs_respuesta.equals(textAudio)) {
 
                         encodedFile = "";
 
                     }
 
-                    Log.w("File", "files" + " " + textView.getId() + "nombre" + nombre);
                     try {
                         JSONObject parametros = new JSONObject();
-                        parametros.put("idField", textView.getId());
+                        parametros.put("idField", idAudio);
                         parametros.put("valueInputField", nombre);
                         parametros.put("valueInputDateField", "");
                         parametros.put("valueListField", "");
@@ -534,7 +540,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         e.printStackTrace();
                     }
 
-                }
+
                 /****************************************/
 
                 localizar();
@@ -585,6 +591,60 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             }
 
         });
+
+        ivRecording.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("option", "" + option);
+                switch (option) {
+                    case 0:
+                        Log.w("seleccion", "record");
+                        recorder = new MediaRecorder();
+                        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                        recorder.setOutputFile(pathAudio);
+                        try {
+                            recorder.prepare();
+                        } catch (IOException e) {
+                        }
+                        recorder.start();
+                        ivRecording.setImageDrawable(getResources().getDrawable(R.drawable.stop));
+                        option++;
+                        break;
+                    case 1:
+                        Log.w("seleccion", "stop");
+                        recorder.stop();
+                        recorder.release();
+                        player = new MediaPlayer();
+                        player.setOnCompletionListener(form_event.this);
+                        try {
+                            player.setDataSource(pathAudio);
+                        } catch (IOException e) {
+                        }
+                        try {
+                            player.prepare();
+                        } catch (IOException e) {
+                        }
+                        ivRecording.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                        option++;
+                        break;
+                    case 2:
+                        Log.w("seleccion", "play");
+                        player.start();
+                        ivRecording.setImageDrawable(getResources().getDrawable(R.drawable.save));
+                        option++;
+                        break;
+                    case 3:
+                        Log.w("seleccion", "save");
+                        ivRecording.setImageDrawable(getResources().getDrawable(R.drawable.recording));
+                        tvPathRecording.setText(pathAudio);
+                        option = 0;
+                        break;
+                }
+            }
+        });
+
 
     }
 
@@ -730,6 +790,29 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 11:
 
+                                llRecording.setVisibility(View.VISIBLE);
+                                idAudio = idField;
+                                tvPathRecording.setHint(is_mandatory);
+                                /***********************/
+                                String carpeta = "geoport";
+                                File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
+                                boolean isCreada = fileAudio.exists();
+                                String nameAudio = "";
+
+                                if(isCreada == false) {
+
+                                    isCreada = fileAudio.mkdir();
+
+                                }
+
+                                if(isCreada == true) {
+
+                                    nameAudio = "AudioGesport" + fecha_1 +".3gp";
+
+                                }
+
+                                pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nameAudio;
+                                /**********************/
                                 /*creartextview(description);
                                 createTextviewAudio(idField,is_mandatory);*/
 
@@ -1022,20 +1105,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    public void createTextviewAudio(int idField, String option) {
-
-        TextView textView = new TextView(this);
-        textView.setId(idField);
-        textView.setTextSize(14);
-        textView.setText(textAudio);
-        textView.setHint(option);
-        textView.setOnClickListener(this);
-
-        llContenedor.addView(textView);
-        textViewsAudio.add(textView);
-
-    }
-
     private void enviarformulario(){
 
         Log.w("url", url2);
@@ -1156,18 +1225,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         }
 
         /*****************************/
-        for (Iterator iterator = textViewsAudio.iterator(); iterator
-                .hasNext();) {
 
-            TextView textView = (TextView) iterator.next();
-
-            if(textView.getId() == opcion) {
-
-                recordingAudio = true;
-
-            }
-
-        }
         /*****************************/
 
         for (Iterator iterator = switches.iterator(); iterator
@@ -1208,12 +1266,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         if(uploadFile) {
 
             recoverDataFile();
-
-        }
-
-        if (recordingAudio) {
-
-            grabaciondeAudio(opcion, this);
 
         }
 
@@ -1696,6 +1748,29 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 /*creartextview(description);
                                 createTextviewAudio(idField,is_mandatory);*/
+                                llRecording.setVisibility(View.VISIBLE);
+                                idAudio = idField;
+                                tvPathRecording.setHint(is_mandatory);
+                                /***********************/
+                                String carpeta = "geoport";
+                                File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
+                                boolean isCreada = fileAudio.exists();
+                                String nameAudio = "";
+
+                                if(isCreada == false) {
+
+                                    isCreada = fileAudio.mkdir();
+
+                                }
+
+                                if(isCreada == true) {
+
+                                    nameAudio = "AudioGesport" + fecha_1 +".3gp";
+
+                                }
+
+                                pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nameAudio;
+                                /**********************/
 
                                 break;
 
@@ -1832,111 +1907,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         }
 
         return path;
-
-    }
-
-    public void grabaciondeAudio(final int id, final Context context) {
-
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.recording_dialog);
-
-        final Button btnRecording = dialog.findViewById(R.id.btnRecording);
-        final Button btnPlay = dialog.findViewById(R.id.btnPlay);
-        final Button btnStop = dialog.findViewById(R.id.btnStop);
-        final Button btnSave = dialog.findViewById(R.id.btnSave);
-
-        btnRecording.setEnabled(true);
-        btnPlay.setEnabled(false);
-        btnStop.setEnabled(false);
-        btnSave.setEnabled(false);
-
-
-        String carpeta = "geoport";
-        File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
-        boolean isCreada = fileJson.exists();
-        String nombreJson = "";
-
-        if(isCreada == false) {
-
-            isCreada = fileJson.mkdir();
-
-        }
-
-        if(isCreada == true) {
-
-            nombreJson = "AudioGesport" + fecha_1 +".3gp";
-
-        }
-
-        pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nombreJson;
-
-        btnRecording.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                recorder = new MediaRecorder();
-                recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                recorder.setOutputFile(pathAudio);
-                try {
-                    recorder.prepare();
-                } catch (IOException e) {
-                }
-                recorder.start();
-                btnStop.setEnabled(true);
-
-            }
-        });
-
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                player.start();
-
-            }
-        });
-
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                recorder.stop();
-                recorder.release();
-                player = new MediaPlayer();
-                player.setOnCompletionListener((MediaPlayer.OnCompletionListener) context);
-                try {
-                    player.setDataSource(pathAudio);
-                } catch (IOException e) {
-                }
-                try {
-                    player.prepare();
-                } catch (IOException e) {
-                }
-
-                btnPlay.setEnabled(true);
-                btnSave.setEnabled(true);
-
-            }
-        });
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                TextView textView = new TextView(context);
-                textView = findViewById(id);
-                textView.setText(pathAudio);
-                dialog.dismiss();
-
-            }
-        });
-
-        dialog.show();
 
     }
 

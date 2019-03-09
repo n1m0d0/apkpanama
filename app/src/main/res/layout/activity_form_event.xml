@@ -29,6 +29,32 @@
                 android:id="@+id/llContenedor">
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llRecording"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/tvPathRecording"
+                    android:text="Haga clic para grabar el audio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"/>
+
+                <ImageView
+                    android:id="@+id/ivRecording"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:src="@drawable/recording"
+                    android:layout_weight="8"/>
+
+            </LinearLayout>
+
             <Button
                 android:layout_marginTop="35dp"
                 android:id="@+id/btnSave"
