@@ -102,7 +102,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     LinearLayout llContenedor, llRecording;
     Button btnSave;
     ImageView ivRecording;
-    TextView tvPathRecording;
+    TextView tvRecording ,tvPathRecording;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
@@ -164,7 +164,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llRecording = findViewById(R.id.llRecording);
         btnSave = findViewById(R.id.btnSave);
         ivRecording = findViewById(R.id.ivRecording);
+        tvRecording =  findViewById(R.id.tvRecording);
+        tvRecording.setTextSize(14);
+        tvRecording.setTextColor(getResources().getColor(R.color.colorBlack));
         tvPathRecording = findViewById(R.id.tvPathRecording);
+        tvPathRecording.setTextSize(14);
         tvPathRecording.setText(textAudio);
 
         Bundle parametros = this.getIntent().getExtras();
@@ -790,6 +794,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 11:
 
+                                tvRecording.setVisibility(View.VISIBLE);
+                                tvRecording.setText(description);
                                 llRecording.setVisibility(View.VISIBLE);
                                 idAudio = idField;
                                 tvPathRecording.setHint(is_mandatory);
@@ -1748,6 +1754,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 /*creartextview(description);
                                 createTextviewAudio(idField,is_mandatory);*/
+                                tvRecording.setVisibility(View.VISIBLE);
+                                tvRecording.setText(description);
                                 llRecording.setVisibility(View.VISIBLE);
                                 idAudio = idField;
                                 tvPathRecording.setHint(is_mandatory);

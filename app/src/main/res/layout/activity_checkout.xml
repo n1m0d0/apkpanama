@@ -26,6 +26,13 @@
 
             </LinearLayout>
 
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tvRecording"
+                android:text=""
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <LinearLayout
                 android:id="@+id/llRecording"
                 android:visibility="gone"
