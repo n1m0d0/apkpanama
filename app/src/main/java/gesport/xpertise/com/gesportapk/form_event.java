@@ -1086,7 +1086,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         iv.setId(idField);
         iv.setImageResource(R.drawable.camera);
         iv.setContentDescription(textImage + "-" + option);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(150,150);
         iv.setLayoutParams(lp);
         llContenedor.addView(iv);
         imageViews.add(iv);
@@ -1342,6 +1342,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     String control = parts[parts.length - 1];
 
                     iv.setContentDescription(description + "-" + control);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
+                    iv.setLayoutParams(lp);
 
                     iv.setImageBitmap(bmp);
 
