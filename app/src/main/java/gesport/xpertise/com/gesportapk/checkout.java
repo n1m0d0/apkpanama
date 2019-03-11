@@ -97,7 +97,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     String idEvent;
     LinearLayout llContenedor, llRecording;
     Button btnSave;
-    ImageView ivRecording;
+    ImageView ivRecording, ivPlaying;
     TextView tvRecording, tvPathRecording;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
@@ -164,6 +164,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         llRecording = findViewById(R.id.llRecording);
         btnSave = findViewById(R.id.btnSave);
         ivRecording = findViewById(R.id.ivRecording);
+        ivPlaying = findViewById(R.id.ivPlaying);
         tvRecording =  findViewById(R.id.tvRecording);
         tvRecording.setTextSize(14);
         tvRecording.setTextColor(getResources().getColor(R.color.colorBlack));
@@ -584,6 +585,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         }
                         recorder.start();
                         ivRecording.setImageDrawable(getResources().getDrawable(R.drawable.stop));
+                        ivPlaying.setVisibility(View.INVISIBLE);
                         option++;
                         break;
                     case 1:
@@ -600,22 +602,19 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                             player.prepare();
                         } catch (IOException e) {
                         }
-                        ivRecording.setImageDrawable(getResources().getDrawable(R.drawable.play));
-                        option++;
-                        break;
-                    case 2:
-                        Log.w("seleccion", "play");
-                        player.start();
-                        ivRecording.setImageDrawable(getResources().getDrawable(R.drawable.save));
-                        option++;
-                        break;
-                    case 3:
-                        Log.w("seleccion", "save");
                         ivRecording.setImageDrawable(getResources().getDrawable(R.drawable.recording));
+                        ivPlaying.setVisibility(View.VISIBLE);
                         tvPathRecording.setText(pathAudio);
                         option = 0;
                         break;
                 }
+            }
+        });
+
+        ivPlaying.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.start();
             }
         });
 
