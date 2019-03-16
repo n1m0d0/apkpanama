@@ -82,6 +82,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     JsonObjectRequest mJsonObjectRequest;
 
     String listText = "Sucesos registrados";
+    String fullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
+        fullName = parametros.getString("fullName");
 
         //funcionn para llenar el array de itemEvents y mostrarlo en el ListView
 
@@ -142,6 +144,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 ir.putExtra("idEvent", id_events);
+                ir.putExtra("fullName", fullName);
                 startActivity(ir);
                 finish();
 
@@ -156,6 +159,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 ir = new Intent(events.this, forms.class);
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
+                ir.putExtra("fullName", fullName);
                 startActivity(ir);
                 finish();
 
@@ -189,7 +193,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menusesion, menu);
         MenuItem User = menu.findItem(R.id.nameUser);
-        User.setTitle(userName);
+        User.setTitle(fullName);
         return true;
     }
 
@@ -242,6 +246,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 ir = new Intent(events.this, Info.class);
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
+                ir.putExtra("fullName", fullName);
                 startActivity(ir);
                 finish();
 

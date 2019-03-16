@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     String credentials;
     String auth;
     int code;
+    String fullName;
     String direccion = "https://test.portcolon2000.site/api/saveEvent";
     String certificado = "";
     String idOffline;
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                                     ir = new Intent(this, events.class);
                                     ir.putExtra("auth", auth);
                                     ir.putExtra("userName", etUser.getText().toString().trim());
+                                    ir.putExtra("fullName", fullName);
                                     startActivity(ir);
 
                                 }
@@ -247,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         try {
             code = response.getInt("code");
+            fullName = response.getString("nameComplete");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -264,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                 Cursor usuario = conexion.searchUser(etUser.getText().toString().trim());
                 if (usuario.moveToFirst() == false) {
 
-                    conexion.createUser(etUser.getText().toString().trim(), auth);
+                    conexion.createUser(etUser.getText().toString().trim(), auth, fullName);
                     conexion.createSession(etUser.getText().toString().trim());
 
                 }
@@ -286,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             ir = new Intent(this, events.class);
             ir.putExtra("auth", auth);
             ir.putExtra("userName", etUser.getText().toString().trim());
+            ir.putExtra("fullName", fullName);
             startActivity(ir);
 
         } else {

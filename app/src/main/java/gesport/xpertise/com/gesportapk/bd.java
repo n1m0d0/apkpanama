@@ -13,6 +13,7 @@ public class bd {
     private static final String idUser = "_id";
     private static final String nameUser = "nameUser";
     private static final String codeUser = "codeUser";
+    private static final String fullName = "fullName";
     // TABLA REGISTRO
     private static final String idAnswers= "_id";
     private static final String nameUserAnswers = "nameUserAnswers";
@@ -29,7 +30,7 @@ public class bd {
     private static final String user = "user";
     private static final String answers = "answers";
     private static final String mysession = "mysession";
-    private static final int VERSION_BD = 13;
+    private static final int VERSION_BD = 14;
 
     private BDHelper nHelper;
     private final Context nContexto;
@@ -48,7 +49,7 @@ public class bd {
 
             db.execSQL("CREATE TABLE " + user + "(" + idUser
                     + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + nameUser
-                    + " TEXT NOT NULL, " + codeUser + " TEXT NOT NULL);");
+                    + " TEXT NOT NULL, " + codeUser + " TEXT NOT NULL, " + fullName + " TEXT NOT NULL);");
 
             db.execSQL("CREATE TABLE " + answers + "(" + idAnswers
                     + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + answersJson
@@ -116,13 +117,14 @@ public class bd {
 
     }
 
-    public long createUser(String nameUser, String codeUser)
+    public long createUser(String nameUser, String codeUser, String fullName)
             throws SQLException {
         // TODO Auto-generated method stub
 
         ContentValues cv = new ContentValues();
         cv.put(this.nameUser, nameUser);
         cv.put(this.codeUser, codeUser);
+        cv.put(this.fullName, fullName);
         return nBD.insert(user, null, cv);
 
     }

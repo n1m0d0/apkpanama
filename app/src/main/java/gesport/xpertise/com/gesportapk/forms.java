@@ -58,7 +58,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     String idIconForm;
     int positionForm;
     int typeDependency;
-
+    String fullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
+        fullName = parametros.getString("fullName");
 
         if(compruebaConexion(this)) {
 
@@ -99,6 +100,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 ir.putExtra("idForm", id_form);
+                ir.putExtra("fullName", fullName);
                 startActivity(ir);
 
             }
@@ -192,6 +194,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         ir = new Intent(forms.this, events.class);
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
+        ir.putExtra("fullName", fullName);
         startActivity(ir);
         finish();
 

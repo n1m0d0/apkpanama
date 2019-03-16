@@ -152,6 +152,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     String pathAudio = null;
     int idAudio;
     int option = 0;
+    String fullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +178,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         userName = parametros.getString("userName");
         idForm = parametros.getString("idForm");
         idEvent = parametros.getString("idEvent");
+        fullName = parametros.getString("fullName");
 
 
         hand.removeCallbacks(actualizar);
@@ -1097,6 +1099,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 ir = new Intent(checkout.this, events.class);
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
+                ir.putExtra("fullName", fullName);
                 startActivity(ir);
                 mProgressDialog.dismiss();
                 finish();
@@ -1591,6 +1594,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         ir = new Intent(checkout.this, events.class);
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
+        ir.putExtra("fullName", fullName);
         startActivity(ir);
         finish();
 

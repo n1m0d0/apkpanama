@@ -63,6 +63,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     int generaForm;
     int idForm;
     Toast msj;
+    String fullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         idEvent = parametros.getString("idEvent");
+        fullName = parametros.getString("fullName");
 
 
         Log.w("idEvent", idEvent);
@@ -108,6 +110,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                 ir.putExtra("userName", userName);
                 ir.putExtra("idForm", "" + generaForm);
                 ir.putExtra("idEvent", "" + idEvent);
+                ir.putExtra("fullName", fullName);
                 startActivity(ir);
                 finish();
 
@@ -464,6 +467,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         ir = new Intent(view_event.this, events.class);
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
+        ir.putExtra("fullName", fullName);
         startActivity(ir);
         finish();
 

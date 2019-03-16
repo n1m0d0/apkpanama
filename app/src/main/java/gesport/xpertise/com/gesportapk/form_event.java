@@ -151,6 +151,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String pathAudio = null;
     int idAudio;
     int option = 0;
+    String fullName;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -176,6 +177,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         idForm = parametros.getString("idForm");
+        fullName = parametros.getString("fullName");
 
 
         hand.removeCallbacks(actualizar);
